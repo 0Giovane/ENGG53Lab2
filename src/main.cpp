@@ -32,6 +32,7 @@
 #include "../Lab2Project_v0.X/APP_FILES/i2c_eeprom.hpp"
 #include "../Lab2Project_v0.X/APP_FILES/application_types.hpp"
 #include "../Lab2Project_v0.X/APP_FILES/application.hpp"
+#include "../Lab2Project_v0.X/APP_FILES/keypad.hpp"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -46,10 +47,11 @@ int main ( void )
  
     I2cEeprom MEMORY;
     LcdDrvSt7920 DISPLAY;
-    DebugUart KEYPAD (UART2);
+    Keypad KEYPAD;
+    DebugUart DEBUG_UART (UART2);
     //Can CAN;    
     
-    Application APP(MEMORY, DISPLAY, KEYPAD);
+    Application APP(MEMORY, DISPLAY, KEYPAD, DEBUG_UART);
     APP.init();
     CORETIMER_DelayMs(20);
     APP.run();

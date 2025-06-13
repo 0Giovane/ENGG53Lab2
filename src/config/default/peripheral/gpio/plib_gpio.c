@@ -44,6 +44,15 @@
 #include "plib_gpio.h"
 #include "interrupts.h"
 
+#define TOTAL_NUM_OF_INT_USED (4U)
+/* Array to store pin objects of each configured interrupt */
+static volatile GPIO_PIN_CALLBACK_OBJ cnPinObj[TOTAL_NUM_OF_INT_USED] =
+    {
+        {.cnPin = CN8_PIN , .gpioPin = GPIO_PIN_RG6, .callback = NULL },
+        {.cnPin = CN9_PIN , .gpioPin = GPIO_PIN_RG7, .callback = NULL },
+        {.cnPin = CN10_PIN , .gpioPin = GPIO_PIN_RG8, .callback = NULL },
+        {.cnPin = CN11_PIN , .gpioPin = GPIO_PIN_RG9, .callback = NULL },
+    };
 
 
 /******************************************************************************
@@ -58,7 +67,7 @@
 */
 void GPIO_Initialize ( void )
 {
-    AD1PCFGSET = 0xf4; /* Digital Mode Enable */
+    AD1PCFGSET = 0xff; /* Digital Mode Enable */
 
     /* PORTA Initialization */
 
@@ -79,9 +88,27 @@ void GPIO_Initialize ( void )
     /* PORTF Initialization */
 
     /* PORTG Initialization */
+    LATG = 0xf004; /* Initial Latch Value */
+    TRISGCLR = 0xf004; /* Direction Control */
 
 
-    CNPUESET = 0xf0; /* Pull-Up Enable */
+    CNPUESET = 0xff; /* Pull-Up Enable */
+    /* Change Notice Enable */
+    CNCONSET = _CNCON_ON_MASK;
+    IEC1SET = _IEC1_CNIE_MASK;
+
+    uint8_t i, bitPosition;
+    uint32_t latestPortValue, mask;
+
+    /* save the initial pin value for CN pins */
+    for(i = 0U; i < TOTAL_NUM_OF_INT_USED; i++)
+    {
+        latestPortValue = *(volatile uint32_t *)(&PORTA + ((cnPinObj[i].gpioPin >> 4U) * 0x10U));
+        bitPosition = (uint8_t)(cnPinObj[i].gpioPin % 16U);
+        mask = 1UL << bitPosition;
+        cnPinObj[i].prevPinValue = (bool)((latestPortValue & mask) >> bitPosition);
+    }
+
 }
 
 // *****************************************************************************
@@ -223,6 +250,83 @@ void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask)
 }
 
 
+void GPIO_PinInterruptEnable(CN_PIN cnPin)
+{
+    CNENSET = (uint32_t)cnPin;
+}
+
+void GPIO_PinInterruptDisable(CN_PIN cnPin)
+{
+    CNENCLR = (uint32_t)cnPin;
+}
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: GPIO APIs which operates on one pin at a time
+// *****************************************************************************
+// *****************************************************************************
+bool GPIO_PinInterruptCallbackRegister(
+    CN_PIN cnPin,
+    const GPIO_PIN_CALLBACK callback,
+    uintptr_t context
+)
+{
+    uint8_t i;
+
+    for(i = 0U; i < TOTAL_NUM_OF_INT_USED; i++)
+    {
+        if (cnPinObj[i].cnPin == cnPin)
+        {
+            cnPinObj[i].callback = callback;
+            cnPinObj[i].context  = context;
+            return true;
+        }
+    }
+    return false;
+}
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local Function Implementation
+// *****************************************************************************
+// *****************************************************************************
+
+/* Function:
+    void CHANGE_NOTICE_InterruptHandler(void)
+
+  Summary:
+    Interrupt Handler for change notice interrupt.
+
+  Remarks:
+	It is an internal function called from ISR, user should not call it directly.
+*/
+void __attribute__((used)) CHANGE_NOTICE_InterruptHandler(void)
+{
+    uint8_t i, bitPosition;
+    uint32_t latestPortValue, mask;
+    bool currPinValue;
+    bool prevPinValue;
+    uintptr_t context;
+    CN_PIN cnPin;
+
+    /* Check which CN interrupt has occurred and call callback if registered */
+    for(i = 0U; i < TOTAL_NUM_OF_INT_USED; i++)
+    {
+        latestPortValue = *(volatile uint32_t *)(&PORTA + ((cnPinObj[i].gpioPin >> 4U) * 0x10U));
+        bitPosition = (uint8_t)(cnPinObj[i].gpioPin % 16U);
+        mask = 1UL << bitPosition;
+        currPinValue = (bool)((latestPortValue & mask) >> bitPosition);
+        prevPinValue = cnPinObj[i].prevPinValue;
+        if((cnPinObj[i].callback != NULL) && (prevPinValue != currPinValue))
+        {
+            context = cnPinObj[i].context;
+            cnPin = cnPinObj[i].cnPin;
+            cnPinObj[i].prevPinValue = currPinValue;
+            cnPinObj[i].callback (cnPin, context);
+        }
+    }
+    IFS1CLR = _IFS1_CNIF_MASK;
+}
 
 /*******************************************************************************
  End of File

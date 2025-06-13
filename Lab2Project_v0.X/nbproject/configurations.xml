@@ -14,6 +14,8 @@
         <itemPath>APP_FILES/i2c_eeprom.hpp</itemPath>
         <itemPath>APP_FILES/application.cpp</itemPath>
         <itemPath>APP_FILES/application.hpp</itemPath>
+        <itemPath>APP_FILES/keypad.hpp</itemPath>
+        <itemPath>APP_FILES/keypad.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">

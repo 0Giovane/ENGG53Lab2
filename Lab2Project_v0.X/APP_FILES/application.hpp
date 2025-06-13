@@ -14,19 +14,21 @@
 #include "debug_uart.hpp"
 #include "i2c_eeprom.hpp"
 #include "lcd_drv_st7920.hpp"
+#include "keypad.hpp"
 
 class Application
 {
 public:
-    Application(I2cEeprom memory, LcdDrvSt7920 lcd, DebugUart keypad);
-    
+    Application(I2cEeprom memory, LcdDrvSt7920 lcd, Keypad keypad, DebugUart debug_uart);
     void init();
     void run();
+    void runKeypadTest();
    
 private:
     I2cEeprom m_memory;
     LcdDrvSt7920 m_lcd;
-    DebugUart m_keypad; // Simulation keypad and using as debug ATTENTION!! baudrate = 115200
+    Keypad m_keypad;
+    DebugUart m_debug_uart; // Simulation keypad and using as debug ATTENTION!! baudrate = 115200
     State_t m_current_state;
     State_t m_next_state;
     
@@ -51,7 +53,7 @@ private:
     void loadUsersFromEeprom();
     
     // UI helpers
-    void readUserInput(char* buffer, size_t maxLength, bool mask, uint16_t lcd_position); //Input from serial terminal - ATTENTION!!! baudrate 115200
+    void readUserInput(char* buffer, size_t max_length, bool mask, uint16_t lcd_position); //Input from serial terminal - ATTENTION!!! baudrate 115200
     void showMessage(LinePossitionScren_t line, const char* str);
     void clearScreen();
 };

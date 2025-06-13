@@ -62,6 +62,64 @@
 // *****************************************************************************
 
 
+/*** Macros for KEYPAD_ROW3 pin ***/
+#define KEYPAD_ROW3_Set()               (LATGSET = (1<<15))
+#define KEYPAD_ROW3_Clear()             (LATGCLR = (1<<15))
+#define KEYPAD_ROW3_Toggle()            (LATGINV= (1<<15))
+#define KEYPAD_ROW3_OutputEnable()      (TRISGCLR = (1<<15))
+#define KEYPAD_ROW3_InputEnable()       (TRISGSET = (1<<15))
+#define KEYPAD_ROW3_Get()               ((PORTG >> 15) & 0x1)
+#define KEYPAD_ROW3_GetLatch()          ((LATG >> 15) & 0x1)
+#define KEYPAD_ROW3_PIN                  GPIO_PIN_RG15
+
+/*** Macros for KEYPAD_COL1 pin ***/
+#define KEYPAD_COL1_Set()               (LATGSET = (1<<6))
+#define KEYPAD_COL1_Clear()             (LATGCLR = (1<<6))
+#define KEYPAD_COL1_Toggle()            (LATGINV= (1<<6))
+#define KEYPAD_COL1_OutputEnable()      (TRISGCLR = (1<<6))
+#define KEYPAD_COL1_InputEnable()       (TRISGSET = (1<<6))
+#define KEYPAD_COL1_Get()               ((PORTG >> 6) & 0x1)
+#define KEYPAD_COL1_GetLatch()          ((LATG >> 6) & 0x1)
+#define KEYPAD_COL1_PIN                  GPIO_PIN_RG6
+#define KEYPAD_COL1_InterruptEnable()   (CNENSET = (1<<8))
+#define KEYPAD_COL1_InterruptDisable()  (CNENCLR = (1<<8))
+
+/*** Macros for KEYPAD_COL2 pin ***/
+#define KEYPAD_COL2_Set()               (LATGSET = (1<<7))
+#define KEYPAD_COL2_Clear()             (LATGCLR = (1<<7))
+#define KEYPAD_COL2_Toggle()            (LATGINV= (1<<7))
+#define KEYPAD_COL2_OutputEnable()      (TRISGCLR = (1<<7))
+#define KEYPAD_COL2_InputEnable()       (TRISGSET = (1<<7))
+#define KEYPAD_COL2_Get()               ((PORTG >> 7) & 0x1)
+#define KEYPAD_COL2_GetLatch()          ((LATG >> 7) & 0x1)
+#define KEYPAD_COL2_PIN                  GPIO_PIN_RG7
+#define KEYPAD_COL2_InterruptEnable()   (CNENSET = (1<<9))
+#define KEYPAD_COL2_InterruptDisable()  (CNENCLR = (1<<9))
+
+/*** Macros for KEYPAD_COL3 pin ***/
+#define KEYPAD_COL3_Set()               (LATGSET = (1<<8))
+#define KEYPAD_COL3_Clear()             (LATGCLR = (1<<8))
+#define KEYPAD_COL3_Toggle()            (LATGINV= (1<<8))
+#define KEYPAD_COL3_OutputEnable()      (TRISGCLR = (1<<8))
+#define KEYPAD_COL3_InputEnable()       (TRISGSET = (1<<8))
+#define KEYPAD_COL3_Get()               ((PORTG >> 8) & 0x1)
+#define KEYPAD_COL3_GetLatch()          ((LATG >> 8) & 0x1)
+#define KEYPAD_COL3_PIN                  GPIO_PIN_RG8
+#define KEYPAD_COL3_InterruptEnable()   (CNENSET = (1<<10))
+#define KEYPAD_COL3_InterruptDisable()  (CNENCLR = (1<<10))
+
+/*** Macros for KEYPAD_COL4 pin ***/
+#define KEYPAD_COL4_Set()               (LATGSET = (1<<9))
+#define KEYPAD_COL4_Clear()             (LATGCLR = (1<<9))
+#define KEYPAD_COL4_Toggle()            (LATGINV= (1<<9))
+#define KEYPAD_COL4_OutputEnable()      (TRISGCLR = (1<<9))
+#define KEYPAD_COL4_InputEnable()       (TRISGSET = (1<<9))
+#define KEYPAD_COL4_Get()               ((PORTG >> 9) & 0x1)
+#define KEYPAD_COL4_GetLatch()          ((LATG >> 9) & 0x1)
+#define KEYPAD_COL4_PIN                  GPIO_PIN_RG9
+#define KEYPAD_COL4_InterruptEnable()   (CNENSET = (1<<11))
+#define KEYPAD_COL4_InterruptDisable()  (CNENCLR = (1<<11))        
+
 /*** Macros for LCD_SID_RW pin ***/
 #define LCD_SID_RW_Set()               (LATBSET = (1<<5))
 #define LCD_SID_RW_Clear()             (LATBCLR = (1<<5))
@@ -122,6 +180,16 @@
 #define UART2_TX_GetLatch()          ((LATF >> 5) & 0x1)
 #define UART2_TX_PIN                  GPIO_PIN_RF5
 
+/*** Macros for KEYPAD_ROW5 pin ***/
+#define KEYPAD_ROW5_Set()               (LATGSET = (1<<2))
+#define KEYPAD_ROW5_Clear()             (LATGCLR = (1<<2))
+#define KEYPAD_ROW5_Toggle()            (LATGINV= (1<<2))
+#define KEYPAD_ROW5_OutputEnable()      (TRISGCLR = (1<<2))
+#define KEYPAD_ROW5_InputEnable()       (TRISGSET = (1<<2))
+#define KEYPAD_ROW5_Get()               ((PORTG >> 2) & 0x1)
+#define KEYPAD_ROW5_GetLatch()          ((LATG >> 2) & 0x1)
+#define KEYPAD_ROW5_PIN                  GPIO_PIN_RG2
+
 /*** Macros for I2C1_SCL pin ***/
 #define I2C1_SCL_Get()               ((PORTA >> 14) & 0x1)
 #define I2C1_SCL_GetLatch()          ((LATA >> 14) & 0x1)
@@ -181,6 +249,36 @@
 #define LED_TEST_Get()               ((PORTE >> 0) & 0x1)
 #define LED_TEST_GetLatch()          ((LATE >> 0) & 0x1)
 #define LED_TEST_PIN                  GPIO_PIN_RE0
+
+/*** Macros for KEYPAD_ROW1 pin ***/
+#define KEYPAD_ROW1_Set()               (LATGSET = (1<<14))
+#define KEYPAD_ROW1_Clear()             (LATGCLR = (1<<14))
+#define KEYPAD_ROW1_Toggle()            (LATGINV= (1<<14))
+#define KEYPAD_ROW1_OutputEnable()      (TRISGCLR = (1<<14))
+#define KEYPAD_ROW1_InputEnable()       (TRISGSET = (1<<14))
+#define KEYPAD_ROW1_Get()               ((PORTG >> 14) & 0x1)
+#define KEYPAD_ROW1_GetLatch()          ((LATG >> 14) & 0x1)
+#define KEYPAD_ROW1_PIN                  GPIO_PIN_RG14
+
+/*** Macros for KEYPAD_ROW2 pin ***/
+#define KEYPAD_ROW2_Set()               (LATGSET = (1<<12))
+#define KEYPAD_ROW2_Clear()             (LATGCLR = (1<<12))
+#define KEYPAD_ROW2_Toggle()            (LATGINV= (1<<12))
+#define KEYPAD_ROW2_OutputEnable()      (TRISGCLR = (1<<12))
+#define KEYPAD_ROW2_InputEnable()       (TRISGSET = (1<<12))
+#define KEYPAD_ROW2_Get()               ((PORTG >> 12) & 0x1)
+#define KEYPAD_ROW2_GetLatch()          ((LATG >> 12) & 0x1)
+#define KEYPAD_ROW2_PIN                  GPIO_PIN_RG12
+
+/*** Macros for KEYPAD_ROW4 pin ***/
+#define KEYPAD_ROW4_Set()               (LATGSET = (1<<13))
+#define KEYPAD_ROW4_Clear()             (LATGCLR = (1<<13))
+#define KEYPAD_ROW4_Toggle()            (LATGINV= (1<<13))
+#define KEYPAD_ROW4_OutputEnable()      (TRISGCLR = (1<<13))
+#define KEYPAD_ROW4_InputEnable()       (TRISGSET = (1<<13))
+#define KEYPAD_ROW4_Get()               ((PORTG >> 13) & 0x1)
+#define KEYPAD_ROW4_GetLatch()          ((LATG >> 13) & 0x1)
+#define KEYPAD_ROW4_PIN                  GPIO_PIN_RG13
 
 
 // *****************************************************************************
@@ -342,6 +440,7 @@ typedef enum
   CN21_PIN = 1 << 21,
 }CN_PIN;
 
+typedef  void (*GPIO_PIN_CALLBACK) ( CN_PIN cnPin, uintptr_t context);
 
 void GPIO_Initialize(void);
 
@@ -366,6 +465,35 @@ void GPIO_PortToggle(GPIO_PORT port, uint32_t mask);
 void GPIO_PortInputEnable(GPIO_PORT port, uint32_t mask);
 
 void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask);
+
+void GPIO_PinInterruptEnable(CN_PIN cnPin);
+
+void GPIO_PinInterruptDisable(CN_PIN cnPin);
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local Data types and Prototypes
+// *****************************************************************************
+// *****************************************************************************
+
+typedef struct {
+
+    /* CN Pin number */
+    CN_PIN                  cnPin;
+
+    /* Corresponding GPIO pin name */
+    GPIO_PIN                gpioPin;
+
+    /* previous port pin value, need to be stored to check if it has changed later */
+    bool                    prevPinValue;
+
+    /* Callback for event on target pin*/
+    GPIO_PIN_CALLBACK       callback;
+
+    /* Callback Context */
+    uintptr_t               context;
+
+} GPIO_PIN_CALLBACK_OBJ;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -413,6 +541,11 @@ static inline void GPIO_PinOutputEnable(GPIO_PIN pin)
     GPIO_PortOutputEnable((GPIO_PORT)(pin>>4U), 0x1UL << (pin & 0xFU));
 }
 
+bool GPIO_PinInterruptCallbackRegister(
+    CN_PIN cnPin,
+    const GPIO_PIN_CALLBACK callback,
+    uintptr_t context
+);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

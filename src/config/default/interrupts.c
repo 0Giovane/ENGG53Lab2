@@ -69,6 +69,7 @@
 void CORE_TIMER_Handler (void);
 void TIMER_1_Handler (void);
 void I2C_1_Handler (void);
+void CHANGE_NOTICE_Handler (void);
 void UART_2_Handler (void);
 
 
@@ -89,6 +90,11 @@ void __attribute__((used)) __ISR(_TIMER_1_VECTOR, ipl1SOFT) TIMER_1_Handler (voi
 void __attribute__((used)) __ISR(_I2C_1_VECTOR, ipl1SOFT) I2C_1_Handler (void)
 {
     I2C_1_InterruptHandler();
+}
+
+void __attribute__((used)) __ISR(_CHANGE_NOTICE_VECTOR, ipl1SOFT) CHANGE_NOTICE_Handler (void)
+{
+    CHANGE_NOTICE_InterruptHandler();
 }
 
 void __attribute__((used)) __ISR(_UART_2_VECTOR, ipl1SOFT) UART_2_Handler (void)

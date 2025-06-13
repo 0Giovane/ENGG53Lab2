@@ -3,10 +3,11 @@
 #include <stdio.h>
 #include <string.h>
 
-Application::Application(I2cEeprom memory, LcdDrvSt7920 lcd, DebugUart keypad):
+Application::Application(I2cEeprom memory, LcdDrvSt7920 lcd, Keypad keypad, DebugUart debug_uart):
     m_memory(memory),
     m_lcd(lcd),
-    m_keypad(keypad),    
+    m_keypad(keypad),
+    m_debug_uart(debug_uart),
     m_current_state(INITIAL), 
     m_next_state(INITIAL)
 {
@@ -20,7 +21,7 @@ void Application::init()
     //Initialize hardwares
     //m_memory.init(); 
     m_lcd.init();
-    //m_keypad.init();
+    m_keypad.init();
     //can.init();
      
     loadUsersFromEeprom();
@@ -66,21 +67,21 @@ void Application::handleInitialState()
     const char* msg_senha      = "\r\nSenha: ";
     const char* msg_carregando = "\r\nCarregando...\r\n";
     
-    m_keypad.write((uint8_t*)msg_machine_id, strlen(msg_machine_id));
+    m_debug_uart.write((uint8_t*)msg_machine_id, strlen(msg_machine_id));
     
     // Login
-    m_keypad.write((uint8_t*)msg_login, strlen(msg_login));
+    m_debug_uart.write((uint8_t*)msg_login, strlen(msg_login));
     memset(m_login, 0, sizeof(m_login));
     readUserInput(m_login, MAX_FIELD_LENGTH, false, 0x0103);
-    m_keypad.write((uint8_t*)"\r\n", 2);
+    m_debug_uart.write((uint8_t*)"\r\n", 2);
 
     //Password
-    m_keypad.write((uint8_t*)msg_senha, strlen(msg_senha));
+    m_debug_uart.write((uint8_t*)msg_senha, strlen(msg_senha));
     memset(m_password, 0, sizeof(m_password));
     readUserInput(m_password, MAX_FIELD_LENGTH, true, 0x0203);
-    m_keypad.write((uint8_t*)"\r\n", 2);
+    m_debug_uart.write((uint8_t*)"\r\n", 2);
     
-    m_keypad.write((uint8_t*)msg_carregando, strlen(msg_carregando));
+    m_debug_uart.write((uint8_t*)msg_carregando, strlen(msg_carregando));
    
     m_next_state = AUTHENTICATOR;
 }
@@ -115,18 +116,18 @@ void Application::handleAuthenticatorState()
     const char* msg_negado     = "\r\nAcesso Negado!\r\n";
     if (acesso_concedido)
     {
-        m_keypad.write((uint8_t*)msg_permitido, strlen(msg_permitido));
+        m_debug_uart.write((uint8_t*)msg_permitido, strlen(msg_permitido));
         showMessage(LINE_4, "Acesso Permitido!");
     }
     else
     {
-        m_keypad.write((uint8_t*)msg_negado, strlen(msg_negado));
+        m_debug_uart.write((uint8_t*)msg_negado, strlen(msg_negado));
         showMessage(LINE_4, "Acesso negado!");
 
     }
     
     const char* linha          = "---------------------\r\n";
-    m_keypad.write((uint8_t*)linha, strlen(linha));
+    m_debug_uart.write((uint8_t*)linha, strlen(linha));
         
     CORETIMER_DelayMs(3000); 
     m_next_state = INITIAL;
@@ -214,23 +215,23 @@ void Application::loadUsersFromEeprom()
     }
 
     const char* user_msg = "\r\nUsuarios cadastrados:\r\n";
-    m_keypad.write((uint8_t*)user_msg, strlen(user_msg));
+    m_debug_uart.write((uint8_t*)user_msg, strlen(user_msg));
     for (uint8_t i = 0; i < MAX_USERS; i++)
     {
         if (m_users[i].login[0] != '\0')
         {
             char user_info[64];
-            snprintf(user_info, sizeof(user_info), "User %d: %s / %s / %s / %s\r\n",
+            snprintf(user_info, sizeof(user_info), "User %d: %s - %s - %s - %s\r\n",
                      i, m_users[i].login, m_users[i].senha,
                      m_users[i].is_blocked ? "Bloqueado" : "Livre",
                      m_users[i].is_admin ? "Adm" : "Comum");
-            m_keypad.write((uint8_t*)user_info, strlen(user_info));
+            m_debug_uart.write((uint8_t*)user_info, strlen(user_info));
         }
     }
 }
 
 
-void Application::readUserInput(char* buffer, size_t maxLength, bool mask, uint16_t lcd_pos)
+void Application::readUserInput(char* buffer, size_t max_length, bool mask, uint16_t lcd_pos)
 {
     size_t i = 0;
     uint8_t ch;
@@ -238,7 +239,39 @@ void Application::readUserInput(char* buffer, size_t maxLength, bool mask, uint1
 
     while (true)
     {
-        if (m_keypad.byteRead(&ch))
+        if (m_keypad.isKeyPressed())
+        {
+            ch = (uint8_t)m_keypad.getKey();
+            if(ch == 'E' || ch == '\r' || ch == '\n') { break; }
+            if(ch == 'Q' && i > 0)
+            {
+                i--;
+                current_lcd_pos -= 1;             
+                m_lcd.writeString(current_lcd_pos, " ");
+                m_debug_uart.write((uint8_t*)"\b \b", 3);
+                continue;
+            }
+            // Ignore if limit reached or invalid character
+            if (i >= max_length || ch < 0x20 || ch > 0x7E){ continue; }
+
+            buffer[i++] = ch;
+
+            // to debug uart
+            if (mask)
+            {
+                uint8_t asterisk = '*';
+                m_debug_uart.write(&asterisk, 1);
+            }
+            else
+            {
+                m_debug_uart.write(&ch, 1);
+            }
+
+            m_lcd.writeChar(current_lcd_pos, mask ? '*' : ch);
+            current_lcd_pos += 1;
+            
+        }
+        else if(m_debug_uart.byteRead(&ch))
         {
             if (ch == '\r' || ch == '\n')
                 break;
@@ -247,15 +280,14 @@ void Application::readUserInput(char* buffer, size_t maxLength, bool mask, uint1
             if ((ch == 0x08 || ch == 0x7F) && i > 0)
             {
                 i--;
-                current_lcd_pos -= 1;
-                // Restaura o underline na posição
+                current_lcd_pos -= 1;             
                 m_lcd.writeString(current_lcd_pos, " ");
-                m_keypad.write((uint8_t*)"\b \b", 3);
+                m_debug_uart.write((uint8_t*)"\b \b", 3);
                 continue;
             }
 
             // Ignore if limit reached or invalid character
-            if (i >= maxLength || ch < 0x20 || ch > 0x7E)
+            if (i >= max_length || ch < 0x20 || ch > 0x7E)
                 continue;
 
             buffer[i++] = ch;
@@ -264,11 +296,11 @@ void Application::readUserInput(char* buffer, size_t maxLength, bool mask, uint1
             if (mask)
             {
                 uint8_t asterisk = '*';
-                m_keypad.write(&asterisk, 1);
+                m_debug_uart.write(&asterisk, 1);
             }
             else
             {
-                m_keypad.write(&ch, 1);
+                m_debug_uart.write(&ch, 1);
             }
 
             m_lcd.writeChar(current_lcd_pos, mask ? '*' : ch);
