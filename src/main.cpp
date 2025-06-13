@@ -33,6 +33,7 @@
 #include "../Lab2Project_v0.X/APP_FILES/application_types.hpp"
 #include "../Lab2Project_v0.X/APP_FILES/application.hpp"
 #include "../Lab2Project_v0.X/APP_FILES/keypad.hpp"
+#include "../Lab2Project_v0.X/APP_FILES/keyboard.h"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
