@@ -24,6 +24,8 @@ public:
     I2cEeprom();
     void write(uint16_t address, uint8_t* data, uint16_t size);
     void read(uint16_t address, uint8_t* data, uint16_t size);
+    uint16_t findUserAddressByLogin(char* login);
+    void deleteAtAddress(uint16_t address);
     bool isBusy();
     
 private:

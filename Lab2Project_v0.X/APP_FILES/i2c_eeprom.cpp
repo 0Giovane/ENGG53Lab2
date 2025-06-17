@@ -49,3 +49,36 @@ bool I2cEeprom::isBusy()
 {
     return !transfer_done;
 }
+
+//I2C NAO TEM UMA FUNCAO DE DELETE, ENTAO SOBRESCREVEREMOS O DADO COM 0xFF
+uint16_t I2cEeprom::findUserAddressByLogin(const char* login)
+{
+    User_t temp_user;
+    for (uint16_t i = 0; i < MAX_USERS; ++i)
+    {
+        uint16_t addr = EEPROM_USER_BASE_ADDR + i * EEPROM_USER_SIZE;
+        read(addr, (uint8_t*)&temp_user, EEPROM_USER_SIZE);
+        
+        if (strcmp((char*)temp_user.login, login) == 0)
+        {
+            return addr; // usuário encontrado
+        }
+    }
+    return 0xFFFF; // Not found
+}
+
+void I2cEeprom::deleteAtAddress(uint16_t address)
+{
+    uint8_t buffer[EEPROM_USER_SIZE + 2];
+    buffer[0] = (uint8_t)(address >> 8);
+    buffer[1] = (uint8_t)(address & 0xFF);
+
+    for (int i = 2; i < EEPROM_USER_SIZE + 2; ++i)
+        buffer[i] = 0;
+
+    transfer_done = false;
+    I2C1_Write(EEPROM_ADDRESS, buffer, EEPROM_USER_SIZE + 2);
+    while (!transfer_done);
+
+    CORETIMER_DelayMs(20);
+}

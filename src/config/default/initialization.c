@@ -178,6 +178,8 @@ void SYS_Initialize ( void* data )
     I2C1_Initialize();
 	UART2_Initialize();
 
+    CAN1_Initialize();
+
     TMR1_Initialize();
 
 
