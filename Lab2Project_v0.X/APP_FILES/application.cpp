@@ -13,6 +13,16 @@ Application::Application(I2cEeprom memory, LcdDrvSt7920 lcd, Keypad keypad, Debu
 {
     memset(m_login, 0, sizeof(m_login));
     memset(m_password, 0, sizeof(m_password));
+    /*
+    todo:
+    não acho que a gente deva salvar os usuário em RAM aqui
+    acho que devemos buscar os usuários do EEPROM sempre que for necessário
+    */
+    /*
+    todo:
+    ter como configurar o número da sala
+    atualmente está hardcoded como "SALA 4"
+    */
     memset(m_users, 0, sizeof(m_users));
 }
 
@@ -40,7 +50,6 @@ void Application::run()
             case ADMIN_MENU:           handleAdminMenuState();        break;
             case REGISTER_USER:        handleRegisterUserState();     break;
             case DELETE_USER:          handleDeleteUserState();       break;
-            case BLOCK_UNBLOCK_USER:   handleBlockUnblockUserState(); break;
             case USER_ACCESS:          handleUserAccessState();       break;
             default: INITIAL;          handleInitialState();          break;                        
         }
@@ -82,7 +91,14 @@ void Application::handleInitialState()
     m_debug_uart.write((uint8_t*)"\r\n", 2);
     
     m_debug_uart.write((uint8_t*)msg_carregando, strlen(msg_carregando));
-   
+
+    /*
+    todo:
+    se o usuário apertou botão do menu, ir para o menu de admin (m_next_state = ADMIN_MENU)
+    se o usuário apertou qualquer outro botão, salvar na variável de login/senha (variáveis da classe application)
+    podemos ter uma variável auxiliar para indicar se está digitando o login ou a senha
+    só devemos ir para o estado AUTHENTICATOR se o usuário terminou de digitar o login e senha
+    */
     m_next_state = AUTHENTICATOR;
 }
 
@@ -92,14 +108,19 @@ void Application::handleAuthenticatorState()
 
     // Credentials verification
     bool acesso_concedido = false;
+
+    /*
+    todo:
+    acho que devemos buscar os usuários do EEPROM aqui
+    e então fazer o loop
+    após o loop, damos free na memória alocada (não sei exatamente como funciona em C++, se devemos dar free manualmente)
+    */
+
     for (uint8_t i = 0; i < MAX_USERS; ++i)
     {
         User_t& u = m_users[i];
 
         if (u.login[0] == '\0')
-            continue;
-
-        if (u.is_blocked)
             continue;
 
         if (strcmp((char*)u.login, m_login) == 0 &&
@@ -130,7 +151,7 @@ void Application::handleAuthenticatorState()
     m_debug_uart.write((uint8_t*)linha, strlen(linha));
         
     CORETIMER_DelayMs(3000); 
-    m_next_state = INITIAL;
+    m_next_state = USER_ACCESS; // Estado para tratar o fechamento automático da porta após o acesso do usuário
     //if adm m_next_state = ADMIN_MENU;
 }
 
@@ -142,6 +163,11 @@ void Application::handleAdminMenuState()
     showMessage(LINE_2, "2 Inserir User");
     showMessage(LINE_3, "3 Deletar User");
     
+    /*
+    todo:
+    ler o botão do teclado e ir pro estado correto
+    */
+    
     //m_next_state = ADMIN_MENU;
     m_next_state = INITIAL;
 }
@@ -150,9 +176,18 @@ void Application::handleRegisterUserState()
 {
     clearScreen();
     showMessage(LINE_1 ,"     SALA 4     ");
+    /*
+    todo: mostrar uma desses mensagens de cada vez (primeiro login, depois senha, depois admin/comum)
+    */
     showMessage(LINE_2, "Login:");
     showMessage(LINE_3, "Senha:");
-    showMessage(LINE_4, "[1]Admin [2]Normal"); 
+    showMessage(LINE_4, "[1]Admin [2]Comum"); 
+
+    /*
+    todo:
+    validar logins iguais
+    bucar usuários da eeprom aqui para fazer a comparação
+    */
     
     //Users examples
     User_t example_users[MAX_USERS] = {
@@ -176,17 +211,36 @@ void Application::handleRegisterUserState()
 
 void Application::handleDeleteUserState() 
 {
-   
-}
+    clearScreen();
+    showMessage(LINE_1 ,"     SALA 4     ");
+    showMessage(LINE_2, "Deletar Usuario");
+    showMessage(LINE_3, "Login:");
 
-void Application::handleBlockUnblockUserState() 
-{
-   
+    /*
+    todo:
+    buscar usuários da eeprom aqui
+    verificar se o login existe
+    se existir, deletar o usuário e mostrar mensagem de sucesso
+    se não existir, mostrar mensagem de erro
+    */
 }
 
 void Application::handleUserAccessState() 
 {
+    clearScreen();
+    showMessage(LINE_1 ,"     SALA 4     ");
+    showMessage(LINE_2, "Porta aberta");
 
+    /*
+    todo:
+    buscar usuários da eeprom aqui
+    verificar se o login existe
+    se existir, deletar o usuário e mostrar mensagem de sucesso
+    se não existir, mostrar mensagem de erro
+    */
+    CORETIMER_DelayMs(5000); // Simulate door open time
+    
+    m_next_state = INITIAL;
 }
 
 // Helper methods implementation

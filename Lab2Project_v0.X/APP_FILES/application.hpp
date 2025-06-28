@@ -40,10 +40,8 @@ private:
     void handleInitialState();
     void handleAuthenticatorState();
     void handleAdminMenuState();
-    void handleBlockUnblockUserState();
     void handleRegisterUserState();
     void handleDeleteUserState();
-    void handleBlockUnblockState();
     void handleUserAccessState();
     
     // Helper methods
