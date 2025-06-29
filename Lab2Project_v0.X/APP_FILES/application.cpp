@@ -1,7 +1,7 @@
 #include "application.hpp"
 #include <stdint.h>
 #include <stdio.h>
-#include <string.h>
+#include <string>
 
 Application::Application(I2cEeprom memory, LcdDrvSt7920 lcd, Keypad keypad, DebugUart debug_uart):
     m_memory(memory),
@@ -36,7 +36,7 @@ void Application::init()
     m_keypad.init();
     //can.init();
      
-    //loadUsersFromEeprom();
+    loadUsersFromEeprom();
 }
 
 void ClearLedsTest()
@@ -76,9 +76,13 @@ void Application::run()
 void Application::handleInitialState() 
 {
     clearScreen();
+    char login_message[30] = "Login: ";
+    char password_message[30] = "Senha: ";
+    strcat(login_message, m_login);
+    strcat(password_message, m_password);
     showMessage(LINE_1 ,"     SALA 4     ");
-    showMessage(LINE_2, "Login:");
-    showMessage(LINE_3, "Senha:");
+    showMessage(LINE_2, login_message);
+    showMessage(LINE_3, password_message);
     
     // To show system process via uart
     const char* msg_machine_id = "\r\nSALA\r\n";
@@ -109,7 +113,9 @@ void Application::handleInitialState()
     podemos ter uma variável auxiliar para indicar se está digitando o login ou a senha
     só devemos ir para o estado AUTHENTICATOR se o usuário terminou de digitar o login e senha
     */
-    m_next_state = AUTHENTICATOR;
+    char key = m_keypad.waitNextKey();
+    m_login[0] = key;
+    m_next_state = INITIAL;
 }
 
 void Application::handleAuthenticatorState() 
