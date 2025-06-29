@@ -28,7 +28,10 @@ typedef struct
 {
     uint8_t login[USER_LOGIN_SIZE + 1];     // +1 to terminator '\0'
     uint8_t senha[USER_PASSWORD_SIZE + 1];
-    uint8_t is_blocked;                        // 0 = blocking, 1 = non-blocking
+    /*
+    todo:
+    adicionar campo para indicar se o usuário está numa sala ou não
+    */
     uint8_t is_admin;
 } User_t;
 
@@ -39,7 +42,6 @@ typedef enum
   ADMIN_MENU,
   REGISTER_USER,
   DELETE_USER,
-  BLOCK_UNBLOCK_USER,
   USER_ACCESS
           
 } State_t;
