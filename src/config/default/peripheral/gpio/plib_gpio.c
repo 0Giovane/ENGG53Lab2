@@ -302,13 +302,15 @@ bool GPIO_PinInterruptCallbackRegister(
 */
 void __attribute__((used)) CHANGE_NOTICE_InterruptHandler(void)
 {
+    CNCONCLR = _CNCON_ON_MASK;
     uint8_t i, bitPosition;
     uint32_t latestPortValue, mask;
     bool currPinValue;
     bool prevPinValue;
     uintptr_t context;
     CN_PIN cnPin;
-
+    //LED_TEST_Toggle();
+    CORETIMER_DelayMs(200);
     /* Check which CN interrupt has occurred and call callback if registered */
     for(i = 0U; i < TOTAL_NUM_OF_INT_USED; i++)
     {
@@ -321,11 +323,12 @@ void __attribute__((used)) CHANGE_NOTICE_InterruptHandler(void)
         {
             context = cnPinObj[i].context;
             cnPin = cnPinObj[i].cnPin;
-            cnPinObj[i].prevPinValue = currPinValue;
+            //cnPinObj[i].prevPinValue = currPinValue;
             cnPinObj[i].callback (cnPin, context);
         }
     }
     IFS1CLR = _IFS1_CNIF_MASK;
+    CNCONSET = _CNCON_ON_MASK;
 }
 
 /*******************************************************************************

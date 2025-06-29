@@ -26,6 +26,8 @@ Application::Application(I2cEeprom memory, LcdDrvSt7920 lcd, Keypad keypad, Debu
     memset(m_users, 0, sizeof(m_users));
 }
 
+
+
 void Application::init()
 {
     //Initialize hardwares
@@ -34,7 +36,15 @@ void Application::init()
     m_keypad.init();
     //can.init();
      
-    loadUsersFromEeprom();
+    //loadUsersFromEeprom();
+}
+
+void ClearLedsTest()
+{
+    LED_L1_Clear();
+    LED_L2_Clear();
+    LED_L3_Clear();
+    LED_L4_Clear();
 }
 
 // Main application loop
@@ -191,11 +201,11 @@ void Application::handleRegisterUserState()
     
     //Users examples
     User_t example_users[MAX_USERS] = {
-        { "0000", "0000", 0, 1 },
-        { "0001", "0001", 0, 0 },
-        { "0020", "0020", 0, 0 },
-        { "0300", "0300", 0, 0 },
-        { "4000", "4000", 0, 0 }
+        { "0000", "0000", 1 },
+        { "0001", "0001", 0 },
+        { "0020", "0020", 0 },
+        { "0300", "0300", 0 },
+        { "4000", "4000", 0 }
     };
     for (uint8_t i = 0; i < MAX_USERS; i++)
     {
@@ -277,7 +287,6 @@ void Application::loadUsersFromEeprom()
             char user_info[64];
             snprintf(user_info, sizeof(user_info), "User %d: %s - %s - %s - %s\r\n",
                      i, m_users[i].login, m_users[i].senha,
-                     m_users[i].is_blocked ? "Bloqueado" : "Livre",
                      m_users[i].is_admin ? "Adm" : "Comum");
             m_debug_uart.write((uint8_t*)user_info, strlen(user_info));
         }
@@ -290,7 +299,6 @@ void Application::readUserInput(char* buffer, size_t max_length, bool mask, uint
     size_t i = 0;
     uint8_t ch;
     uint16_t current_lcd_pos = lcd_pos;
-
     while (true)
     {
         if (m_keypad.isKeyPressed())
@@ -372,4 +380,30 @@ void Application::showMessage(LinePossitionScren_t line, const char* str)
 void Application::clearScreen() 
 {
     m_lcd.clear();
+}
+
+
+void Application::runKeypadTest()
+{
+    char ch;
+    while(1)
+    {
+        if(m_keypad.isKeyPressed())
+        {
+            ch = m_keypad.getKey();
+            switch(ch)
+            {
+                case '1': ClearLedsTest(); LED_L1_Set(); break;
+                case '2': ClearLedsTest(); LED_L2_Set();break;
+                case '3': ClearLedsTest(); LED_L2_Set();LED_L1_Set();break;
+                case '4': ClearLedsTest(); LED_L3_Set();break;
+                case '5': ClearLedsTest(); LED_L3_Set(); LED_L1_Set(); break;
+                case '6': ClearLedsTest(); LED_L3_Set();LED_L2_Set();break;
+                case '7': ClearLedsTest(); LED_L3_Set();LED_L2_Set();LED_L1_Set();break;
+                case '8': ClearLedsTest(); LED_L4_Set(); break;
+                case '9': ClearLedsTest(); LED_L4_Set(); LED_L1_Set();break;
+            }
+            ch = 0;
+        }
+    }
 }

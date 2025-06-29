@@ -43,19 +43,17 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    LED_TEST_Set();
- 
     I2cEeprom MEMORY;
     LcdDrvSt7920 DISPLAY;
     Keypad KEYPAD;
     DebugUart DEBUG_UART (UART2);
-    //Can CAN;    
+    //Can CAN;
     
     Application APP(MEMORY, DISPLAY, KEYPAD, DEBUG_UART);
     APP.init();
     CORETIMER_DelayMs(20);
     APP.run();
-    
+    //APP.runKeypadTest();
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */

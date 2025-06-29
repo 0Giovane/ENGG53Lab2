@@ -1,1 +1,0 @@
- $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"APP_FILES" -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -Werror -Wall   -D=$(CND_CONF)  $(COMPARISON_BUILD)    C:\Users\joser\Downloads\Documents\Desktop\EngComp\LabII\ENGG53Lab2\src\config\default\peripheral\gpio\plib_gpio.c

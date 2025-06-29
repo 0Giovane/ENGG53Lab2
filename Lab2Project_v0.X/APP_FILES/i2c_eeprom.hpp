@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "peripheral/i2c/master/plib_i2c1_master.h"
+#include "../Lab2Project_v0.X/APP_FILES/application_types.hpp"
 
 typedef enum
 {
@@ -24,7 +25,7 @@ public:
     I2cEeprom();
     void write(uint16_t address, uint8_t* data, uint16_t size);
     void read(uint16_t address, uint8_t* data, uint16_t size);
-    uint16_t findUserAddressByLogin(char* login);
+    uint16_t findUserAddressByLogin(const char* login);
     void deleteAtAddress(uint16_t address);
     bool isBusy();
     

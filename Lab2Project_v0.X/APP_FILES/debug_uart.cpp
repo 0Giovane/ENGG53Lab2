@@ -46,7 +46,7 @@ void DebugUart::read(uint8_t *rx_buffer, uint16_t size)
             return;
     }
 
-    while (!rx_done); 
+    //while (!rx_done); 
 }
 
 bool DebugUart::byteRead(uint8_t* byte)
@@ -62,7 +62,7 @@ bool DebugUart::byteRead(uint8_t* byte)
             return false;
     }
 
-    while (!rx_done);
+    //while (!rx_done);
     return true;
 }
 
@@ -79,7 +79,7 @@ void DebugUart::write(uint8_t *tx_buffer, uint16_t size)
             return;
     }
 
-    while (!tx_done);
+    //while (!tx_done);
 }
 
 

@@ -3,25 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/config/default/peripheral/i2c/master/plib_i2c1_master.c</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/i2c_eeprom.cpp</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/config/default/device.h</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/config/default/interrupts.c</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/debug_uart.cpp</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/application.cpp</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/config/default/definitions.h</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/keypad.cpp</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/config/default/interrupts.h</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/lcd_drv_st7920.cpp</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/main.cpp</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/config/default/peripheral/gpio/plib_gpio.h</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/config/default/peripheral/tmr1/plib_tmr1.h</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/application_types.hpp</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/application.hpp</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/config/default/p32MX795F512L.ld</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/config/default/peripheral/tmr1/plib_tmr1.c</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/Lab2Project_v0.X/Lab2Project_v0.mc3</file>
-            <file>file:/C:/Users/joser/Downloads/Documents/Desktop/EngComp/LabII/ENGG53Lab2/src/config/default/peripheral/coretimer/plib_coretimer.h</file>
+            <file>file:/C:/Users/joao0/MPLABXProjects/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/application.hpp</file>
+            <file>file:/C:/Users/joao0/MPLABXProjects/ENGG53Lab2/src/main.cpp</file>
+            <file>file:/C:/Users/joao0/MPLABXProjects/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/keypad.hpp</file>
+            <file>file:/C:/Users/joao0/MPLABXProjects/ENGG53Lab2/src/config/default/peripheral/gpio/plib_gpio.c</file>
+            <file>file:/C:/Users/joao0/MPLABXProjects/ENGG53Lab2/src/config/default/peripheral/gpio/plib_gpio.h</file>
+            <file>file:/C:/Users/joao0/MPLABXProjects/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/application.cpp</file>
+            <file>file:/C:/Users/joao0/MPLABXProjects/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/keypad.cpp</file>
         </group>
     </open-files>
 </project-private>

@@ -1,1 +1,0 @@
-$(MP_EXTRA_CC_PRE) -g -D__DEBUG   -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"APP_FILES" -frtti -fexceptions -fno-check-new -fenforce-eh-specs -ffunction-sections -O1 -I"../src" -I"../src/config/default"  -D=$(CND_CONF)  $(COMPARISON_BUILD)    C:\Users\joser\Downloads\Documents\Desktop\EngComp\LabII\ENGG53Lab2\Lab2Project_v0.X\APP_FILES\i2c_eeprom.cpp
