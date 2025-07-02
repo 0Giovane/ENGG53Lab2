@@ -48,6 +48,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include "peripheral/coretimer/plib_coretimer.h"
 #include "peripheral/can/plib_can1.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/gpio/plib_gpio.h"
@@ -68,7 +69,7 @@ extern "C" {
 #define DEVICE_SERIES        "PIC32MX"
 
 /* CPU clock frequency */
-#define CPU_CLOCK_FREQUENCY 40000000U
+#define CPU_CLOCK_FREQUENCY 80000000U
 
 // *****************************************************************************
 // *****************************************************************************

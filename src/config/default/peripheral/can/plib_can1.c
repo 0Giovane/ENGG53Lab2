@@ -63,7 +63,7 @@
 #define CAN_FIFO_MESSAGE_BUFFER_MAX  (32U)
 
 #define CAN_CONFIGURATION_MODE       (0x4UL)
-#define CAN_OPERATION_MODE           (0x0UL)
+#define CAN_OPERATION_MODE           (0x2UL)
 #define CAN_NUM_OF_FILTER            (1U)
 /* FIFO Offset in word (4 bytes) */
 #define CAN_FIFO_OFFSET              (0x10U)
@@ -132,10 +132,10 @@ void CAN1_Initialize(void)
 
     /* Set the Bitrate to 500 Kbps */
     C1CFG = ((4UL << _C1CFG_BRP_POSITION) & _C1CFG_BRP_MASK)
-                            | ((1UL << _C1CFG_SJW_POSITION) & _C1CFG_SJW_MASK)
-                            | ((1UL << _C1CFG_SEG2PH_POSITION) & _C1CFG_SEG2PH_MASK)
-                            | ((3UL << _C1CFG_SEG1PH_POSITION) & _C1CFG_SEG1PH_MASK)
-                            | ((0UL << _C1CFG_PRSEG_POSITION) & _C1CFG_PRSEG_MASK)
+                            | ((3UL << _C1CFG_SJW_POSITION) & _C1CFG_SJW_MASK)
+                            | ((3UL << _C1CFG_SEG2PH_POSITION) & _C1CFG_SEG2PH_MASK)
+                            | ((7UL << _C1CFG_SEG1PH_POSITION) & _C1CFG_SEG1PH_MASK)
+                            | ((1UL << _C1CFG_PRSEG_POSITION) & _C1CFG_PRSEG_MASK)
                             | _C1CFG_SEG2PHTS_MASK;
 
     /* Set FIFO base address for all message buffers */

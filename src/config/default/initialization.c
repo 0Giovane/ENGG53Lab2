@@ -74,7 +74,7 @@
 
 
 /*** DEVCFG2 ***/
-#pragma config FPLLIDIV =   DIV_2
+#pragma config FPLLIDIV =   DIV_1
 #pragma config FPLLMUL =    MUL_20
 #pragma config FPLLODIV =   DIV_1
 #pragma config UPLLEN =     OFF
@@ -161,7 +161,7 @@ void SYS_Initialize ( void* data )
     __builtin_mtc0(16, 0,(__builtin_mfc0(16, 0) | 0x3U));
 
     /* Configure Flash Wait States and Prefetch */
-    CHECONbits.PFMWS = 1;
+    CHECONbits.PFMWS = 2;
     CHECONbits.PREFEN = 3;
 
     /* Set the SRAM wait states to One */
@@ -174,6 +174,7 @@ void SYS_Initialize ( void* data )
 
 	GPIO_Initialize();
 
+    CORETIMER_Initialize();
     CAN1_Initialize();
 
 

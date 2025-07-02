@@ -62,6 +62,26 @@
 // *****************************************************************************
 
 
+/*** Macros for LED_5_SUCCESFUL pin ***/
+#define LED_5_SUCCESFUL_Set()               (LATESET = (1<<8))
+#define LED_5_SUCCESFUL_Clear()             (LATECLR = (1<<8))
+#define LED_5_SUCCESFUL_Toggle()            (LATEINV= (1<<8))
+#define LED_5_SUCCESFUL_OutputEnable()      (TRISECLR = (1<<8))
+#define LED_5_SUCCESFUL_InputEnable()       (TRISESET = (1<<8))
+#define LED_5_SUCCESFUL_Get()               ((PORTE >> 8) & 0x1)
+#define LED_5_SUCCESFUL_GetLatch()          ((LATE >> 8) & 0x1)
+#define LED_5_SUCCESFUL_PIN                  GPIO_PIN_RE8
+
+/*** Macros for LED_8_FAIL pin ***/
+#define LED_8_FAIL_Set()               (LATESET = (1<<9))
+#define LED_8_FAIL_Clear()             (LATECLR = (1<<9))
+#define LED_8_FAIL_Toggle()            (LATEINV= (1<<9))
+#define LED_8_FAIL_OutputEnable()      (TRISECLR = (1<<9))
+#define LED_8_FAIL_InputEnable()       (TRISESET = (1<<9))
+#define LED_8_FAIL_Get()               ((PORTE >> 9) & 0x1)
+#define LED_8_FAIL_GetLatch()          ((LATE >> 9) & 0x1)
+#define LED_8_FAIL_PIN                  GPIO_PIN_RE9
+
 /*** Macros for GPIO_RE0 pin ***/
 #define GPIO_RE0_Set()               (LATESET = (1<<0))
 #define GPIO_RE0_Clear()             (LATECLR = (1<<0))

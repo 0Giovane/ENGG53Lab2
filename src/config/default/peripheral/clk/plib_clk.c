@@ -89,6 +89,20 @@ void CLK_Initialize( void )
     /* Code for fuse settings can be found in "initialization.c" */
 
 
+    /* unlock system for clock configuration */
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
+
+    /* Make FRC as the input clock for USB */
+    OSCCONSET = _OSCCON_UFRCEN_MASK;
+
+
+
+
+    /* Lock system since done with clock configuration */
+    SYSKEY = 0x33333333U;
+
     /* Wait for PLL to be locked */
     while(OSCCONbits.SLOCK == 0U)
                  {

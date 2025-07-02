@@ -2,6 +2,7 @@ build/default/production/_ext/1171490990/exceptions.o: \
  ../src/config/default/exceptions.c ../src/config/default/device.h \
  ../src/config/default/toolchain_specifics.h \
  ../src/config/default/definitions.h \
+ ../src/config/default/peripheral/coretimer/plib_coretimer.h \
  ../src/config/default/peripheral/can/plib_can1.h \
  ../src/config/default/device.h \
  ../src/config/default/peripheral/can/plib_can_common.h \
@@ -14,6 +15,8 @@ build/default/production/_ext/1171490990/exceptions.o: \
 ../src/config/default/toolchain_specifics.h:
 
 ../src/config/default/definitions.h:
+
+../src/config/default/peripheral/coretimer/plib_coretimer.h:
 
 ../src/config/default/peripheral/can/plib_can1.h:
 
