@@ -1,76 +1,58 @@
-/*******************************************************************************
-  Main Source File
-
-  Company:
-    Microchip Technology Inc.
-
-  File Name:
-    main.c
-
-  Summary:
-    This file contains the "main" function for a project.
-
-  Description:
-    This file contains the "main" function for a project.  The
-    "main" function calls the "SYS_Initialize" function to initialize the state
-    machines of all modules in the system
- *******************************************************************************/
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
-
 #include <stddef.h>                     // Defines NULL
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
+#define CAN_APP_RX_FIFO     1 
+#include "../Lab2Project_v0.X/APP_FILES/can.h"
+// RE5=LED_CAN_5=ADD person R6=LED6=Toggle e RE7 = LEDS 7 = TEST
 
-#include "../Lab2Project_v0.X/APP_FILES/lcd_drv_st7920.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/debug_uart.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/i2c_eeprom.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/application_types.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/application.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/keypad.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/keyboard.h"
-// *****************************************************************************
-// *****************************************************************************
-// Section: Main Entry Point
-// *****************************************************************************
-// *****************************************************************************
+static bool sendAddPerson = true;
 
-int main ( void )
+
+int main(void)
 {
-    /* Initialize all modules */
-    SYS_Initialize ( NULL );
-    LED_TEST_Set();
- 
-    I2cEeprom MEMORY;
-    LcdDrvSt7920 DISPLAY;
-    Keypad KEYPAD;
-    DebugUart DEBUG_UART (UART2);
-    //Can CAN;    
     
-    Application APP(MEMORY, DISPLAY, KEYPAD, DEBUG_UART);
-    APP.init();
-    CORETIMER_DelayMs(20);
-    APP.run();
-    
-    while ( true )
+    uint8_t data_to_send[8] = {0};
+    SYS_Initialize(NULL);
+
+
+    CAN_Init();
+
+    while (true)
     {
-        /* Maintain state machines of all polled MPLAB Harmony modules. */
-        SYS_Tasks ( );
-       
+        SYS_Tasks();
+        if(sendAddPerson){
+        uint32_t messageId = CAN_BuildMessageId(MY_BOARD_ID, ADD_PERSON);
+        data_to_send[0] = 0x01; // Ex: ID da pessoa
+        data_to_send[1] = 0xAA; // Ex: Algum status inicial
+        CAN_SendMessage(messageId, 2, data_to_send, CAN_MSG_TX_DATA_FRAME);
+        
+        sendAddPerson = !sendAddPerson;
+        
+        }
+        /* TESTAR direto sem Callback 
+    uint32_t receivedId;
+    uint8_t receivedLength;
+    uint8_t receivedData[8];
+    uint16_t receivedTimestamp;; 
+    CAN_MSG_RX_ATTRIBUTE receivedAttributes;
+    bool messageReceived;
+    messageReceived = CAN1_MessageReceive(
+        &receivedId,
+        &receivedLength,
+        receivedData,
+        &receivedTimestamp,
+        CAN_APP_RX_FIFO, 
+        &receivedAttributes
+    );
+
+    if (messageReceived)
+    {
+        GPIO_PinToggle(GPIO_PIN_RE7);
     }
+   */
+    }
+ 
 
-    /* Execution should not come here during normal operation */
-
-    return ( EXIT_FAILURE );
+    return EXIT_FAILURE;
 }
-
-
-/*******************************************************************************
- End of File
-*/
-

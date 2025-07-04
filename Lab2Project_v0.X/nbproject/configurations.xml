@@ -5,8 +5,6 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="APP_FILES" displayName="APP_FILES" projectFiles="true">
-        <itemPath>APP_FILES/lcd_drv_st7920.hpp</itemPath>
-        <itemPath>APP_FILES/lcd_drv_st7920.cpp</itemPath>
         <itemPath>APP_FILES/debug_uart.cpp</itemPath>
         <itemPath>APP_FILES/debug_uart.hpp</itemPath>
         <itemPath>APP_FILES/application_types.hpp</itemPath>
@@ -14,16 +12,24 @@
         <itemPath>APP_FILES/i2c_eeprom.hpp</itemPath>
         <itemPath>APP_FILES/application.cpp</itemPath>
         <itemPath>APP_FILES/application.hpp</itemPath>
-        <itemPath>APP_FILES/keypad.hpp</itemPath>
-        <itemPath>APP_FILES/keypad.cpp</itemPath>
         <itemPath>APP_FILES/keyboard.c</itemPath>
         <itemPath>APP_FILES/keyboard.h</itemPath>
         <itemPath>APP_FILES/timer1.c</itemPath>
         <itemPath>APP_FILES/timer1.h</itemPath>
+        <itemPath>APP_FILES/can.c</itemPath>
+        <itemPath>APP_FILES/can.h</itemPath>
+        <itemPath>APP_FILES/keypad.cpp</itemPath>
+        <itemPath>APP_FILES/keypad.hpp</itemPath>
+        <itemPath>APP_FILES/lcd_drv_st7920.cpp</itemPath>
+        <itemPath>APP_FILES/lcd_drv_st7920.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">
           <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="can" displayName="can" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/can/plib_can1.h</itemPath>
+              <itemPath>../src/config/default/peripheral/can/plib_can_common.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="clk" displayName="clk" projectFiles="true">
               <itemPath>../src/config/default/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
@@ -80,6 +86,9 @@
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">
           <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="can" displayName="can" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/can/plib_can1.c</itemPath>
+            </logicalFolder>
             <logicalFolder name="clk" displayName="clk" projectFiles="true">
               <itemPath>../src/config/default/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
@@ -127,7 +136,7 @@
         <targetDevice>PIC32MX795F512L</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool></platformTool>
+        <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>4.60</languageToolchainVersion>
         <platform>3</platform>
@@ -165,6 +174,7 @@
       <C32>
         <property key="additional-warnings" value="true"/>
         <property key="addresss-attribute-use" value="false"/>
+        <property key="appendMe" value=""/>
         <property key="enable-app-io" value="false"/>
         <property key="enable-omit-frame-pointer" value="false"/>
         <property key="enable-symbols" value="true"/>
@@ -220,6 +230,7 @@
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>
         <property key="allocate-dinit" value="false"/>
+        <property key="appendMe" value=""/>
         <property key="code-dinit" value="false"/>
         <property key="ebase-addr" value=""/>
         <property key="enable-check-sections" value="false"/>
@@ -259,6 +270,7 @@
       <C32CPP>
         <property key="additional-warnings" value="false"/>
         <property key="addresss-attribute-use" value="false"/>
+        <property key="appendMe" value=""/>
         <property key="check-new" value="false"/>
         <property key="eh-specs" value="true"/>
         <property key="enable-app-io" value="false"/>
@@ -298,6 +310,9 @@
         <property key="stack-smashing" value=""/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <PICkit3PlatformTool>
+        <property key="firmware.download.all" value="false"/>
+      </PICkit3PlatformTool>
       <Tool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>

@@ -2,14 +2,14 @@
 
 manifest_file_version: 1.0.0
 project: Lab2Project_v0
-creation_date: 2025-06-12T19:36:06.231-03:00[America/Sao_Paulo]
+creation_date: 2025-07-03T11:29:58.107-03:00[America/Cayenne]
 operating_system: Windows 10
 mcc_mode: IDE
 mcc_mode_version: v6.20
 device_name: PIC32MX795F512L
 compiler: XC32 4.60
-mcc_version: 5.5.0
-mcc_core_version: 5.7.0
+mcc_version: 5.5.1
+mcc_core_version: 5.7.1
 content_manager_version: 5.0.1
 is_mcc_offline: false
 is_using_prerelease_versions: false

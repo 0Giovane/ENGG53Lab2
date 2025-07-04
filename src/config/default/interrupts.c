@@ -71,6 +71,7 @@ void TIMER_1_Handler (void);
 void I2C_1_Handler (void);
 void CHANGE_NOTICE_Handler (void);
 void UART_2_Handler (void);
+void CAN_1_Handler (void);
 
 
 // *****************************************************************************
@@ -100,6 +101,11 @@ void __attribute__((used)) __ISR(_CHANGE_NOTICE_VECTOR, ipl1SOFT) CHANGE_NOTICE_
 void __attribute__((used)) __ISR(_UART_2_VECTOR, ipl1SOFT) UART_2_Handler (void)
 {
     UART_2_InterruptHandler();
+}
+
+void __attribute__((used)) __ISR(_CAN_1_VECTOR, ipl1SOFT) CAN_1_Handler (void)
+{
+    CAN1_InterruptHandler();
 }
 
 

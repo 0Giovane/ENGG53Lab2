@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "definitions.h": "c",
+    "plib_can1.h": "c"
+  }
+}
