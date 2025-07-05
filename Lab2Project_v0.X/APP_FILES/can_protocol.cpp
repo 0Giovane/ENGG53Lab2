@@ -1,12 +1,12 @@
 #include "can_protocol.hpp"
 
-static volatile bool tx_done = false;
-static volatile bool rx_done = false;
+static volatile bool tx_done = true;
+static volatile bool rx_done = true;
 
 void CanProtocol::rxCallback(uintptr_t context)
 {
     rx_done = true;
-    //GPIO_RE6_Toggle();  
+    //GPIO_PinToggle(GPIO_PIN_RE7); // Debug: toggle LED quando receber mensagem
 }
 
 void CanProtocol::txCallback(uintptr_t context)
@@ -38,26 +38,26 @@ bool CanProtocol::sendMessage(message_t msg)
 {
     if (tx_done)
     {
-        tx_done = false;
+        //tx_done = false;
         msg.id = buildMessageId(m_board_id, msg.type);
         if (CAN1_TxFIFOIsFull(CAN_APP_TX_FIFO))
         {
-        return false; 
+            return false; 
         }
         return CAN1_MessageTransmit(msg.id, msg.length, (uint8_t *)msg.data, CAN_APP_TX_FIFO, CAN_MSG_TX_DATA_FRAME);
     }
+  
+    return false;
 }
 
-bool CanProtocol::receivedMessage(message_t msg)
+bool CanProtocol::receivedMessage(message_t& msg)
 {
     if (rx_done)
     {
-        rx_done = false;    
-        if (CAN1_TxFIFOIsFull(CAN_APP_RX_FIFO))
-        {
-            return false; 
-        }
+        rx_done = true;    
         CAN_MSG_RX_ATTRIBUTE receivedAttributes;
-        return CAN1_MessageReceive(&msg.id, &msg.length, msg.data, &msg.timestamp, CAN_APP_RX_FIFO, &receivedAttributes);
+        bool teste = CAN1_MessageReceive(&msg.id, &msg.length, msg.data, &msg.timestamp, 1, &receivedAttributes);
+        return teste;
     }
+    return false;
 }

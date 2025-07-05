@@ -2,14 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/PROJECT_LAB/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/can.c</file>
-            <file>file:/D:/PROJECT_LAB/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/debug_uart.cpp</file>
-            <file>file:/D:/PROJECT_LAB/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/can_protocol.hpp</file>
-            <file>file:/D:/PROJECT_LAB/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/can.h</file>
-            <file>file:/D:/PROJECT_LAB/ENGG53Lab2/src/config/default/peripheral/can/plib_can1.h</file>
-            <file>file:/D:/PROJECT_LAB/ENGG53Lab2/src/main.cpp</file>
-            <file>file:/D:/PROJECT_LAB/ENGG53Lab2/Lab2Project_v0.X/APP_FILES/can_protocol.cpp</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

@@ -158,6 +158,10 @@ void CAN1_Initialize(void)
     /* Configure CAN Acceptance Filter Masks */
     C1RXM0 = (0UL & CAN_MSG_SID_MASK) << _C1RXM0_SID_POSITION;
 
+    /* Enable Timestamp */
+    C1CONSET = _C1CON_CANCAP_MASK;
+    C1TMR = 0U & _C1TMR_CANTSPRE_MASK;
+
     /* Set Interrupts */
     IEC1SET = _IEC1_CAN1IE_MASK;
     C1INTSET = _C1INT_SERRIE_MASK | _C1INT_CERRIE_MASK | _C1INT_IVRIE_MASK;

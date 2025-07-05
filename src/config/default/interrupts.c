@@ -106,6 +106,7 @@ void __attribute__((used)) __ISR(_UART_2_VECTOR, ipl1SOFT) UART_2_Handler (void)
 void __attribute__((used)) __ISR(_CAN_1_VECTOR, ipl1SOFT) CAN_1_Handler (void)
 {
     CAN1_InterruptHandler();
+
 }
 
 

@@ -38,7 +38,7 @@ public:
     CanProtocol();
     void init();
     bool sendMessage(message_t msg);
-    bool receivedMessage(message_t msg);
+    bool receivedMessage(message_t& msg);
     uint8_t getBoardId();
    
     static void txCallback(uintptr_t context_handle);

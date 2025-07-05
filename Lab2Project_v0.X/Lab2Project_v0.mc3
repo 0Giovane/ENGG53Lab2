@@ -496,7 +496,9 @@
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="can1" name="CAN1_FIFO1_TXEN"/>
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;can1&gt;
   &lt;can1 dnOrder=&quot;0&quot; id=&quot;CAN1_FIFO1_TXEN&quot;&gt;
-    &lt;Values dnOrder=&quot;0&quot;/&gt;
+    &lt;Values dnOrder=&quot;0&quot;&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;0&quot;/&gt;
+    &lt;/Values&gt;
   &lt;/can1&gt;
 &lt;/can1&gt;
 </value>
@@ -506,6 +508,22 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;can1&gt;
   &lt;can1 dnOrder=&quot;0&quot; id=&quot;CAN1_FIFO1_TXPR&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;/&gt;
+  &lt;/can1&gt;
+&lt;/can1&gt;
+</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="can1" name="CAN1_FIFO2"/>
+         <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;can1&gt;
+  &lt;can1 dnOrder=&quot;0&quot; id=&quot;CAN1_FIFO2&quot;&gt;
+    &lt;Attributes dnOrder=&quot;0&quot;&gt;
+      &lt;Boolean dnOrder=&quot;0&quot; id=&quot;enabled&quot;&gt;
+        &lt;Value dnOrder=&quot;0&quot;&gt;false&lt;/Value&gt;
+      &lt;/Boolean&gt;
+      &lt;Boolean dnOrder=&quot;1&quot; id=&quot;visible&quot;&gt;
+        &lt;Value dnOrder=&quot;0&quot;&gt;false&lt;/Value&gt;
+      &lt;/Boolean&gt;
+    &lt;/Attributes&gt;
   &lt;/can1&gt;
 &lt;/can1&gt;
 </value>
@@ -902,6 +920,22 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;can1&gt;
   &lt;can1 dnOrder=&quot;0&quot; id=&quot;CAN1_FIFO2_TXPR&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;/&gt;
+  &lt;/can1&gt;
+&lt;/can1&gt;
+</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="can1" name="CAN1_FIFO3"/>
+         <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;can1&gt;
+  &lt;can1 dnOrder=&quot;0&quot; id=&quot;CAN1_FIFO3&quot;&gt;
+    &lt;Attributes dnOrder=&quot;0&quot;&gt;
+      &lt;Boolean dnOrder=&quot;0&quot; id=&quot;enabled&quot;&gt;
+        &lt;Value dnOrder=&quot;0&quot;&gt;false&lt;/Value&gt;
+      &lt;/Boolean&gt;
+      &lt;Boolean dnOrder=&quot;1&quot; id=&quot;visible&quot;&gt;
+        &lt;Value dnOrder=&quot;0&quot;&gt;false&lt;/Value&gt;
+      &lt;/Boolean&gt;
+    &lt;/Attributes&gt;
   &lt;/can1&gt;
 &lt;/can1&gt;
 </value>
@@ -2891,7 +2925,9 @@
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="can1" name="NUMBER_OF_FIFO"/>
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;can1&gt;
   &lt;can1 dnOrder=&quot;0&quot; id=&quot;NUMBER_OF_FIFO&quot;&gt;
-    &lt;Values dnOrder=&quot;0&quot;/&gt;
+    &lt;Values dnOrder=&quot;0&quot;&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;2&quot;/&gt;
+    &lt;/Values&gt;
   &lt;/can1&gt;
 &lt;/can1&gt;
 </value>
@@ -24943,7 +24979,7 @@
       </entry>
       <entry>
          <file>..\src\config\default\peripheral\can\plib_can1.c</file>
-         <hash>1e2e62997b10cb979d629130368f00f6b8a55472a24c35d2bc5a2fc28d9cec77</hash>
+         <hash>e7da7e705320cd968b51b350c0d58e06c99d229773475a3def68d635fae30ad6</hash>
       </entry>
       <entry>
          <file>..\src\config\default\peripheral\can\plib_can1.h</file>
