@@ -48,8 +48,8 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "peripheral/i2c/master/plib_i2c1_master.h"
 #include "peripheral/coretimer/plib_coretimer.h"
+#include "peripheral/i2c/master/plib_i2c1_master.h"
 #include "peripheral/uart/plib_uart2.h"
 #include "peripheral/can/plib_can1.h"
 #include "peripheral/clk/plib_clk.h"
@@ -58,8 +58,6 @@
 #include "peripheral/tmr1/plib_tmr1.h"
 
 // DOM-IGNORE-BEGIN
-// ID da placa
-#define MY_BOARD_ID         0x05
 #ifdef __cplusplus  // Provide C++ Compatibility
 
 extern "C" {

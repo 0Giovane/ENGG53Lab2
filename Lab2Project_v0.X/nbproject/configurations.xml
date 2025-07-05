@@ -22,6 +22,8 @@
         <itemPath>APP_FILES/keypad.hpp</itemPath>
         <itemPath>APP_FILES/lcd_drv_st7920.cpp</itemPath>
         <itemPath>APP_FILES/lcd_drv_st7920.hpp</itemPath>
+        <itemPath>APP_FILES/can_protocol.hpp</itemPath>
+        <itemPath>APP_FILES/can_protocol.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">

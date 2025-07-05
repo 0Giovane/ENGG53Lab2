@@ -72,6 +72,36 @@
 #define KEYPAD_ROW3_GetLatch()          ((LATG >> 15) & 0x1)
 #define KEYPAD_ROW3_PIN                  GPIO_PIN_RG15
 
+/*** Macros for LED_DANIEL pin ***/
+#define LED_DANIEL_Set()               (LATESET = (1<<5))
+#define LED_DANIEL_Clear()             (LATECLR = (1<<5))
+#define LED_DANIEL_Toggle()            (LATEINV= (1<<5))
+#define LED_DANIEL_OutputEnable()      (TRISECLR = (1<<5))
+#define LED_DANIEL_InputEnable()       (TRISESET = (1<<5))
+#define LED_DANIEL_Get()               ((PORTE >> 5) & 0x1)
+#define LED_DANIEL_GetLatch()          ((LATE >> 5) & 0x1)
+#define LED_DANIEL_PIN                  GPIO_PIN_RE5
+
+/*** Macros for GPIO_RE6 pin ***/
+#define GPIO_RE6_Set()               (LATESET = (1<<6))
+#define GPIO_RE6_Clear()             (LATECLR = (1<<6))
+#define GPIO_RE6_Toggle()            (LATEINV= (1<<6))
+#define GPIO_RE6_OutputEnable()      (TRISECLR = (1<<6))
+#define GPIO_RE6_InputEnable()       (TRISESET = (1<<6))
+#define GPIO_RE6_Get()               ((PORTE >> 6) & 0x1)
+#define GPIO_RE6_GetLatch()          ((LATE >> 6) & 0x1)
+#define GPIO_RE6_PIN                  GPIO_PIN_RE6
+
+/*** Macros for GPIO_RE7 pin ***/
+#define GPIO_RE7_Set()               (LATESET = (1<<7))
+#define GPIO_RE7_Clear()             (LATECLR = (1<<7))
+#define GPIO_RE7_Toggle()            (LATEINV= (1<<7))
+#define GPIO_RE7_OutputEnable()      (TRISECLR = (1<<7))
+#define GPIO_RE7_InputEnable()       (TRISESET = (1<<7))
+#define GPIO_RE7_Get()               ((PORTE >> 7) & 0x1)
+#define GPIO_RE7_GetLatch()          ((LATE >> 7) & 0x1)
+#define GPIO_RE7_PIN                  GPIO_PIN_RE7
+
 /*** Macros for KEYPAD_COL1 pin ***/
 #define KEYPAD_COL1_Set()               (LATGSET = (1<<6))
 #define KEYPAD_COL1_Clear()             (LATGCLR = (1<<6))
@@ -81,8 +111,8 @@
 #define KEYPAD_COL1_Get()               ((PORTG >> 6) & 0x1)
 #define KEYPAD_COL1_GetLatch()          ((LATG >> 6) & 0x1)
 #define KEYPAD_COL1_PIN                  GPIO_PIN_RG6
-#define KEYPAD_COL1_InterruptEnable()   (CNENSET = (1<<8))
-#define KEYPAD_COL1_InterruptDisable()  (CNENCLR = (1<<8))
+#define KEYPAD_COL1_InterruptEnable()   (CNENGSET = (1<<6))
+#define KEYPAD_COL1_InterruptDisable()  (CNENGCLR = (1<<6))
 
 /*** Macros for KEYPAD_COL2 pin ***/
 #define KEYPAD_COL2_Set()               (LATGSET = (1<<7))
@@ -93,8 +123,8 @@
 #define KEYPAD_COL2_Get()               ((PORTG >> 7) & 0x1)
 #define KEYPAD_COL2_GetLatch()          ((LATG >> 7) & 0x1)
 #define KEYPAD_COL2_PIN                  GPIO_PIN_RG7
-#define KEYPAD_COL2_InterruptEnable()   (CNENSET = (1<<9))
-#define KEYPAD_COL2_InterruptDisable()  (CNENCLR = (1<<9))
+#define KEYPAD_COL2_InterruptEnable()   (CNENGSET = (1<<7))
+#define KEYPAD_COL2_InterruptDisable()  (CNENGCLR = (1<<7))
 
 /*** Macros for KEYPAD_COL3 pin ***/
 #define KEYPAD_COL3_Set()               (LATGSET = (1<<8))
@@ -105,8 +135,6 @@
 #define KEYPAD_COL3_Get()               ((PORTG >> 8) & 0x1)
 #define KEYPAD_COL3_GetLatch()          ((LATG >> 8) & 0x1)
 #define KEYPAD_COL3_PIN                  GPIO_PIN_RG8
-#define KEYPAD_COL3_InterruptEnable()   (CNENSET = (1<<10))
-#define KEYPAD_COL3_InterruptDisable()  (CNENCLR = (1<<10))
 
 /*** Macros for KEYPAD_COL4 pin ***/
 #define KEYPAD_COL4_Set()               (LATGSET = (1<<9))
@@ -117,8 +145,6 @@
 #define KEYPAD_COL4_Get()               ((PORTG >> 9) & 0x1)
 #define KEYPAD_COL4_GetLatch()          ((LATG >> 9) & 0x1)
 #define KEYPAD_COL4_PIN                  GPIO_PIN_RG9
-#define KEYPAD_COL4_InterruptEnable()   (CNENSET = (1<<11))
-#define KEYPAD_COL4_InterruptDisable()  (CNENCLR = (1<<11))        
 
 /*** Macros for LCD_SID_RW pin ***/
 #define LCD_SID_RW_Set()               (LATBSET = (1<<5))
