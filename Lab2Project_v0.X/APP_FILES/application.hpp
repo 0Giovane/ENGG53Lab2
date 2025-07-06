@@ -1,6 +1,6 @@
 /* 
  * File:   application.hpp
- * Author: Bianca
+ * Author: Bianca, João Cerqueira
  *
  * Created on June 4, 2025, 9:59 PM
  */
@@ -15,6 +15,7 @@
 #include "i2c_eeprom.hpp"
 #include "lcd_drv_st7920.hpp"
 #include "keypad.hpp"
+#include <string>
 
 class Application
 {
@@ -34,6 +35,10 @@ private:
     
     char m_login[MAX_FIELD_LENGTH];
     char m_password[MAX_FIELD_LENGTH];
+    
+    std::string m_login_string;
+    std::string m_password_string;
+    
     User_t m_users[MAX_USERS];  // to save users in RAM
    
     // State handlers
@@ -50,10 +55,21 @@ private:
     void deleteUserFromEeprom(const User_t& user);
     void loadUsersFromEeprom();
     
+    void passwordConstructor(char key);
+    void loginConstructor(char key);
+    void passwordConstructor(std::string inputString);
+    void loginConstructor(std::string inputString);
+    
     // UI helpers
     void readUserInput(char* buffer, size_t max_length, bool mask, uint16_t lcd_position); //Input from serial terminal - ATTENTION!!! baudrate 115200
     void showMessage(LinePossitionScren_t line, const char* str);
     void clearScreen();
+    
+    enum class InputMode: uint8_t
+    {
+        Login,
+        Password
+    };
 };
 
 #endif	/* APPLICATION_HPP */

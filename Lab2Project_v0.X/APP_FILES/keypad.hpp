@@ -1,6 +1,6 @@
 /* 
  * File:   keypad.hpp
- * Author: Bianca
+ * Author: Bianca, João Cerqueira
  *
  * Created on 12 de Junho de 2025, 19:18
  */

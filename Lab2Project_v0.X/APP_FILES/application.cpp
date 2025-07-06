@@ -1,7 +1,6 @@
 #include "application.hpp"
 #include <stdint.h>
 #include <stdio.h>
-#include <string>
 
 Application::Application(I2cEeprom memory, LcdDrvSt7920 lcd, Keypad keypad, DebugUart debug_uart):
     m_memory(memory),
@@ -11,8 +10,8 @@ Application::Application(I2cEeprom memory, LcdDrvSt7920 lcd, Keypad keypad, Debu
     m_current_state(INITIAL), 
     m_next_state(INITIAL)
 {
-    memset(m_login, 0, sizeof(m_login));
-    memset(m_password, 0, sizeof(m_password));
+    //memset(m_login, 0, sizeof(m_login));
+    //memset(m_password, 0, sizeof(m_password));
     /*
     todo:
     não acho que a gente deva salvar os usuário em RAM aqui
@@ -36,7 +35,7 @@ void Application::init()
     m_keypad.init();
     //can.init();
      
-    loadUsersFromEeprom();
+    loadUsersFromEeprom(); 
 }
 
 void ClearLedsTest()
@@ -72,50 +71,65 @@ void Application::run()
     }
 }
 
+
 // State handlers implementation
 void Application::handleInitialState() 
 {
     clearScreen();
-    char login_message[30] = "Login: ";
-    char password_message[30] = "Senha: ";
-    strcat(login_message, m_login);
-    strcat(password_message, m_password);
+    const char* login_message = "Login: ";
+    const char* password_message = "Senha: ";
     showMessage(LINE_1 ,"     SALA 4     ");
     showMessage(LINE_2, login_message);
     showMessage(LINE_3, password_message);
-    
     // To show system process via uart
     const char* msg_machine_id = "\r\nSALA\r\n";
     const char* msg_login      = "\r\nLogin: ";
     const char* msg_senha      = "\r\nSenha: ";
     const char* msg_carregando = "\r\nCarregando...\r\n";
-    
-    m_debug_uart.write((uint8_t*)msg_machine_id, strlen(msg_machine_id));
-    
-    // Login
-    m_debug_uart.write((uint8_t*)msg_login, strlen(msg_login));
-    memset(m_login, 0, sizeof(m_login));
-    readUserInput(m_login, MAX_FIELD_LENGTH, false, 0x0103);
-    m_debug_uart.write((uint8_t*)"\r\n", 2);
+    bool hide = true;
+    InputMode mode = InputMode::Login;
+    while(1)
+    {
+        clearScreen();
+        
+        showMessage(LINE_1 ,"     SALA 4     ");
+        
+        showMessage(LINE_2, (std::string("Login:") + ( mode == InputMode::Login? "> ":" " ) + m_login_string).c_str());
+        
+        if(hide) showMessage(LINE_3, (std::string("Password:") + ( mode == InputMode::Password? "> ":" " ) + std::string(m_password_string.size(), '*')).c_str());
+        else showMessage(LINE_3, (std::string("Password:") + ( mode == InputMode::Password? "> ":" " ) + m_password_string).c_str());
+        
 
-    //Password
-    m_debug_uart.write((uint8_t*)msg_senha, strlen(msg_senha));
-    memset(m_password, 0, sizeof(m_password));
-    readUserInput(m_password, MAX_FIELD_LENGTH, true, 0x0203);
-    m_debug_uart.write((uint8_t*)"\r\n", 2);
+        char key = m_keypad.waitNextKey();
+        switch(key)
+        {
+            case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9':
+                if(mode == InputMode::Login) loginConstructor(key);
+                if(mode == InputMode::Password) passwordConstructor(key);
+                break;
+            case '*':
+                hide = !hide;
+                break;
+            case 'Q':
+                if(mode == InputMode::Login)m_login_string.clear();
+                if(mode == InputMode::Password){m_password_string.clear();hide = true;}
+                break;
+            case 'U':
+                mode = InputMode::Login; break;
+            case 'D':
+                mode = InputMode::Password; break;
+        }    
+    }
+    m_next_state = INITIAL;
     
-    m_debug_uart.write((uint8_t*)msg_carregando, strlen(msg_carregando));
-
-    /*
+    
+     /*
     todo:
     se o usuário apertou botão do menu, ir para o menu de admin (m_next_state = ADMIN_MENU)
     se o usuário apertou qualquer outro botão, salvar na variável de login/senha (variáveis da classe application)
     podemos ter uma variável auxiliar para indicar se está digitando o login ou a senha
     só devemos ir para o estado AUTHENTICATOR se o usuário terminou de digitar o login e senha
     */
-    char key = m_keypad.waitNextKey();
-    m_login[0] = key;
-    m_next_state = INITIAL;
 }
 
 void Application::handleAuthenticatorState() 
@@ -412,4 +426,30 @@ void Application::runKeypadTest()
             ch = 0;
         }
     }
+}
+
+void Application::loginConstructor(char key)
+{
+    if(m_login_string.size() < 4 )
+        {
+            m_login_string+=key;
+        }    
+}
+
+void Application::loginConstructor(std::string inputString)
+{
+    m_login_string = inputString;  
+}
+
+void Application::passwordConstructor(char key)
+{
+    if(m_password_string.size() < 4 )
+    {
+        m_password_string+=key;
+    }  
+}
+
+void Application::passwordConstructor(std::string inputString)
+{
+    m_password_string = inputString;
 }

@@ -48,7 +48,6 @@ int main ( void )
     Keypad KEYPAD;
     DebugUart DEBUG_UART (UART2);
     //Can CAN;
-    
     Application APP(MEMORY, DISPLAY, KEYPAD, DEBUG_UART);
     APP.init();
     CORETIMER_DelayMs(20);

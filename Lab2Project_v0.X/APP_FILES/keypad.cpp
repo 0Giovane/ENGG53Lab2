@@ -99,8 +99,10 @@ void Keypad::activateLines()
 
 char Keypad::waitNextKey()
 {
+    char key;
     while(!Keypad::is_key_pressed);
-    getKey();
+    key = getKey();
+    return key;
 }
 
 void Keypad::scan()
