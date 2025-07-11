@@ -6,16 +6,16 @@
 void CanProtocol::txCallback(uintptr_t context)
 {
     CanProtocol* self = reinterpret_cast<CanProtocol*>(context);
-    self->tx_done = true;
+    self->m_tx_done = true;
 }
 
 void CanProtocol::rxCallback(uintptr_t context)
 {
     CanProtocol* self = reinterpret_cast<CanProtocol*>(context);
-    self->rx_done = true;
+    self->m_rx_done = true;
 }
 
-CanProtocol::CanProtocol(): tx_done(false), rx_done(false){}
+CanProtocol::CanProtocol(): m_tx_done(false), m_rx_done(false){}
 
 void CanProtocol::init()
 {
@@ -65,31 +65,31 @@ bool CanProtocol::buildMessageId(uint8_t board_id, uint8_t command_type, uint32_
 
 bool CanProtocol::isTxDone() 
 { 
-    return tx_done; 
+    return m_tx_done; 
 }
 
 bool CanProtocol::isRxDone() 
 { 
-    return rx_done; 
+    return m_rx_done; 
 }
 
 void CanProtocol::setTxFlag() 
 { 
-    tx_done = true; 
+    m_tx_done = true; 
 }
 
 void CanProtocol::setRxFlag() 
 { 
-    rx_done = true; 
+    m_rx_done = true; 
 }
 
 void CanProtocol::resetTxFlag() 
 { 
-    tx_done = false; 
+    m_tx_done = false; 
 }
 
 void CanProtocol::resetRxFlag() 
 { 
-    rx_done = false; 
+    m_rx_done = false; 
 }
 

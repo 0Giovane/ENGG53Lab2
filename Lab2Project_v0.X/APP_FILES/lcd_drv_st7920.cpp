@@ -1,8 +1,9 @@
-#include "lcd_drv_st7920.hpp"
-#include <stdint.h>
+#include <xc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "definitions.h"
+#include "lcd_drv_st7920.hpp"
 
 LcdDrvSt7920::LcdDrvSt7920()
 {
@@ -142,21 +143,4 @@ void LcdDrvSt7920::sendBit(bool bit)
     delayUs(1);
     LCD_SCLK_EN_Set();
     delayUs(1);
-}
-
-void LcdDrvSt7920::delayUs(uint16_t us)
-{
-    // 16 NOPs per us to 16 MHz
-    for (volatile uint16_t i = 0; i < (us * 16); ++i)
-    {
-        __asm__ volatile("nop");
-    }
-}
-
-void LcdDrvSt7920::delayMs(uint16_t ms)
-{
-    while (ms--)
-    {
-        delayUs(1000);
-    }
 }

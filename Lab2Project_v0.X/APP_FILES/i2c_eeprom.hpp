@@ -8,32 +8,28 @@
 #ifndef I2C_EEPROM_HPP
 #define I2C_EEPROM_HPP
 
-#include <xc.h>
 #include <stdint.h>
 #include <stddef.h>
-#include "peripheral/i2c/master/plib_i2c1_master.h"
-#include "../Lab2Project_v0.X/APP_FILES/application_types.hpp"
+#include "utils.hpp"
 
-typedef enum
-{
-    I2C1 = 1
-} I2cHandle_t;
+#define I2C_EEPROM_ADDRESS 0x50
 
 class I2cEeprom
 {
 public:
     I2cEeprom();
-    void write(uint16_t address, uint8_t* data, uint16_t size);
-    void read(uint16_t address, uint8_t* data, uint16_t size);
-    uint16_t findUserAddressByLogin(const char* login);
-    void deleteAtAddress(uint16_t address);
-    bool isBusy();
+    
+    void init();
+    bool write(uint16_t address, uint8_t* data, uint16_t size);
+    bool read(uint16_t address, uint8_t* data, uint16_t size);
+    
+    bool isDone();
     
 private:
-    I2cHandle_t m_i2c;
-
+    volatile bool m_is_done;
+    
     static void callback(uintptr_t context);
-    static constexpr uint8_t EEPROM_ADDRESS = 0x50;
+    void registerCallback();
 };
 
 #endif /* I2C_EEPROM_HPP */

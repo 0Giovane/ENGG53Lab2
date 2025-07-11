@@ -9,7 +9,6 @@
         <itemPath>APP_FILES/lcd_drv_st7920.cpp</itemPath>
         <itemPath>APP_FILES/debug_uart.cpp</itemPath>
         <itemPath>APP_FILES/debug_uart.hpp</itemPath>
-        <itemPath>APP_FILES/application_types.hpp</itemPath>
         <itemPath>APP_FILES/i2c_eeprom.cpp</itemPath>
         <itemPath>APP_FILES/i2c_eeprom.hpp</itemPath>
         <itemPath>APP_FILES/application.cpp</itemPath>
@@ -18,6 +17,9 @@
         <itemPath>APP_FILES/keypad.cpp</itemPath>
         <itemPath>APP_FILES/can_protocol.hpp</itemPath>
         <itemPath>APP_FILES/can_protocol.cpp</itemPath>
+        <itemPath>APP_FILES/commons.hpp</itemPath>
+        <itemPath>APP_FILES/utils.cpp</itemPath>
+        <itemPath>APP_FILES/utils.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">
@@ -360,6 +362,7 @@
         <property key="event.recorder.debugger.behavior" value="Running"/>
         <property key="event.recorder.enabled" value="false"/>
         <property key="event.recorder.scvd.files" value=""/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="lastid" value=""/>
         <property key="memories.aux" value="false"/>

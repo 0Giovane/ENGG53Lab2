@@ -9,30 +9,31 @@
 #define	DEBUG_UART_HPP
 
 #include <stdint.h>
-#include "peripheral/uart/plib_uart2.h"
-
-typedef enum
-{
-    UART2 = 2
-            
-} UartHandle_t;
 
 class DebugUart
 {
 public:
-    DebugUart(UartHandle_t uart);
+    DebugUart();
     
-    void read(uint8_t *rx_buffer, uint16_t size);
-    void write(uint8_t *tx_buffer, uint16_t size);
+    void init();
+    bool read(uint8_t *rx_buffer, uint16_t size);
+    bool write(uint8_t *tx_buffer, uint16_t size);
+        
+    bool byteRead(uint8_t* byte);
+    
+    bool isTxDone();
+    bool isRxDone();
+    void setTxFlag();
+    void setRxFlag();
+    void resetTxFlag();
+    void resetRxFlag();
+    
+private:
+    volatile bool m_tx_done;
+    volatile bool m_rx_done;
     
     static void rxCallback(uintptr_t context);
     static void txCallback(uintptr_t context);
-    
-    bool byteRead(uint8_t* byte);
-    
-private:
-    UartHandle_t m_uart;
-    
     void registerCallbacks();
 };
 

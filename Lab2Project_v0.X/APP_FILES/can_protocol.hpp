@@ -32,8 +32,8 @@ public:
     void resetRxFlag();
         
 private:
-    volatile bool tx_done;
-    volatile bool rx_done;
+    volatile bool m_tx_done;
+    volatile bool m_rx_done;
     
     static void txCallback(uintptr_t context);
     static void rxCallback(uintptr_t context);

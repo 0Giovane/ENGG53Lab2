@@ -24,43 +24,8 @@
 #define EEPROM_USER_BASE_ADDR  0x0000
 #define EEPROM_USER_SIZE       sizeof(User_t)
 
-typedef struct
-{
-    uint8_t login[USER_LOGIN_SIZE + 1];     // +1 to terminator '\0'
-    uint8_t senha[USER_PASSWORD_SIZE + 1];
-    /*
-    todo:
-    adicionar campo para indicar se o usuário está numa sala ou não
-    */
-    uint8_t is_admin;
-} User_t;
 
-typedef enum
-{
-    UPDATE,
-    ADD,
-    DEL        
-} commandType_t;
 
-typedef enum
-{
-  INITIAL          = 0,
-  AUTHENTICATOR,
-  ADMIN_MENU,
-  REGISTER_USER,
-  DELETE_USER,
-  USER_ACCESS
-          
-} State_t;
-
-typedef enum
-{
-  LINE_1 = 0x0000,
-  LINE_2 = 0x0100,
-  LINE_3 = 0x0200,
-  LINE_4 = 0x0300  
-          
-} LinePossitionScren_t;
 
 #endif	/* APPLICATION_TYPES_HPP */
 

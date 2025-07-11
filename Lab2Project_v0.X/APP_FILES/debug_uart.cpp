@@ -1,87 +1,80 @@
-#include "debug_uart.hpp"
-#include "definitions.h"
+#include <xc.h>
 #include <string.h>
-
-static volatile bool tx_done = false;
-static volatile bool rx_done = false;
-
-void DebugUart::rxCallback(uintptr_t context)
-{
-    rx_done = true;
-}
+#include "definitions.h"
+#include "debug_uart.hpp"
 
 void DebugUart::txCallback(uintptr_t context)
 {
-    tx_done = true;
+    DebugUart* self = reinterpret_cast<DebugUart*>(context);
+    self->m_tx_done = true;
 }
 
-DebugUart::DebugUart(UartHandle_t uart): m_uart(uart)
+void DebugUart::rxCallback(uintptr_t context)
+{
+    DebugUart* self = reinterpret_cast<DebugUart*>(context);
+    self->m_rx_done = true;
+}
+
+DebugUart::DebugUart(): m_tx_done(false), m_rx_done(false){}
+
+void DebugUart::init() 
 {
     registerCallbacks();
 }
 
 void DebugUart::registerCallbacks()
 {
-    switch (m_uart)
-    {
-        case UART2:
-            UART2_ReadCallbackRegister(rxCallback, (uintptr_t)this);
-            UART2_WriteCallbackRegister(txCallback, (uintptr_t)this);
-            break;
-        default:
-            return;
-    }
+    UART2_WriteCallbackRegister(DebugUart::txCallback, (uintptr_t)this);
+    UART2_ReadCallbackRegister(DebugUart::rxCallback, (uintptr_t)this);
 }
 
-void DebugUart::read(uint8_t *rx_buffer, uint16_t size)
+bool DebugUart::read(uint8_t *rx_buffer, uint16_t size)
 {
-    rx_done = false;
-
-    switch (m_uart)
-    {
-        case UART2:
-            UART2_Read(rx_buffer, size);
-            break;
-        default:
-            return;
-    }
-
-    //while (!rx_done); 
+    bool ret = UART2_Read(rx_buffer, size);
+    return ret;
 }
 
 bool DebugUart::byteRead(uint8_t* byte)
 {
-    rx_done = false;
-
-    switch (m_uart)
-    {
-        case UART2:
-            UART2_Read(byte, 1);
-            break;
-        default:
-            return false;
-    }
-
-    //while (!rx_done);
-    return true;
+    bool ret = UART2_Read(byte, 1);
+    return ret;
 }
 
-void DebugUart::write(uint8_t *tx_buffer, uint16_t size)
+bool DebugUart::write(uint8_t *tx_buffer, uint16_t size)
 {
-    tx_done = false;
-
-    switch (m_uart)
-    {
-        case UART2:
-            UART2_Write(tx_buffer, size);
-            break;
-        default:
-            return;
-    }
-
-    //while (!tx_done);
+    bool ret = UART2_Write(tx_buffer, size);
+    return ret;
 }
 
+bool DebugUart::isTxDone() 
+{ 
+    return m_tx_done; 
+}
+
+bool DebugUart::isRxDone() 
+{ 
+    return m_rx_done; 
+}
+
+void DebugUart::setTxFlag() 
+{ 
+    m_tx_done = true; 
+}
+
+void DebugUart::setRxFlag() 
+{ 
+    m_rx_done = true; 
+}
+
+void DebugUart::resetTxFlag() 
+{ 
+    m_tx_done = false; 
+}
+
+void DebugUart::resetRxFlag() 
+{ 
+    m_rx_done = false; 
+}
 
 
 

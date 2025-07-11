@@ -8,8 +8,8 @@
 #ifndef LCD_DRV_ST7920_HPP
 #define	LCD_DRV_ST7920_HPP
 
-#include <xc.h>
-#include "definitions.h"
+#include <stdint.h>
+#include "utils.hpp"
 
 // Implemented serial mode only
 class LcdDrvSt7920
@@ -32,9 +32,6 @@ public:
     
     inline static uint16_t rowCol(uint8_t row, uint8_t col) { return (row << 8) | col; }
     
-    void delayUs(uint16_t us);
-    void delayMs(uint16_t ms); 
-
 private:
     // Main function (RS: 0=command, 1=data)
     void sendSerial(uint8_t rs, uint8_t data);
@@ -42,13 +39,6 @@ private:
     // bit-bang
     void sendBit(bool bit);
     void sendByte(uint8_t byte);
-
-//    static constexpr auto LCD_PSB_MODE = GPIO_PIN_RB2;
-//    static constexpr auto LCD_CS_RS    = GPIO_PIN_RB4;
-//    static constexpr auto LCD_SID_RW   = GPIO_PIN_RB5;
-//    static constexpr auto LCD_SCLK_EN  = GPIO_PIN_RB6;
-//    static constexpr auto LCD_RST      = GPIO_PIN_RB7;
-
 };
 
 #endif	/* LCD_DRV_ST7920_HPP */
