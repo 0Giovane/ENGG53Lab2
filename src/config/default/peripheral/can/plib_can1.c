@@ -63,7 +63,7 @@
 #define CAN_FIFO_MESSAGE_BUFFER_MAX  (32U)
 
 #define CAN_CONFIGURATION_MODE       (0x4UL)
-#define CAN_OPERATION_MODE           (0x0UL)
+#define CAN_OPERATION_MODE           (0x2UL)
 #define CAN_NUM_OF_FILTER            (1U)
 /* FIFO Offset in word (4 bytes) */
 #define CAN_FIFO_OFFSET              (0x10U)
@@ -71,7 +71,7 @@
 #define CAN_FILTER_OFFSET            (0x4U)
 /* Acceptance Mask Offset in word (4 bytes) */
 #define CAN_ACCEPTANCE_MASK_OFFSET   (0x4U)
-#define CAN_MESSAGE_RAM_CONFIG_SIZE (16U)
+#define CAN_MESSAGE_RAM_CONFIG_SIZE (64U)
 #define CAN_MSG_IDE_MASK            (0x10000000U)
 #define CAN_MSG_SID_MASK            (0x7FFU)
 #define CAN_MSG_TIMESTAMP_MASK      (0xFFFF0000U)
@@ -136,19 +136,19 @@ void CAN1_Initialize(void)
     }
 
     /* Set the Bitrate to 500 Kbps */
-    C1CFG = ((4UL << _C1CFG_BRP_POSITION) & _C1CFG_BRP_MASK)
+    C1CFG = ((0UL << _C1CFG_BRP_POSITION) & _C1CFG_BRP_MASK)
                             | ((0UL << _C1CFG_SJW_POSITION) & _C1CFG_SJW_MASK)
                             | ((0UL << _C1CFG_SEG2PH_POSITION) & _C1CFG_SEG2PH_MASK)
-                            | ((0UL << _C1CFG_SEG1PH_POSITION) & _C1CFG_SEG1PH_MASK)
-                            | ((0UL << _C1CFG_PRSEG_POSITION) & _C1CFG_PRSEG_MASK)
+                            | ((5UL << _C1CFG_SEG1PH_POSITION) & _C1CFG_SEG1PH_MASK)
+                            | ((7UL << _C1CFG_PRSEG_POSITION) & _C1CFG_PRSEG_MASK)
                             | _C1CFG_SEG2PHTS_MASK;
 
     /* Set FIFO base address for all message buffers */
     C1FIFOBA = (uint32_t)KVA_TO_PA(can_message_buffer);
 
     /* Configure CAN FIFOs */
-    C1FIFOCON0 = (((8UL - 1UL) << _C1FIFOCON0_FSIZE_POSITION) & _C1FIFOCON0_FSIZE_MASK) | _C1FIFOCON0_TXEN_MASK | ((0x0UL << _C1FIFOCON0_TXPRI_POSITION) & _C1FIFOCON0_TXPRI_MASK) | ((0x0UL << _C1FIFOCON0_RTREN_POSITION) & _C1FIFOCON0_RTREN_MASK);
-    C1FIFOCON1 = (((8UL - 1UL) << _C1FIFOCON1_FSIZE_POSITION) & _C1FIFOCON1_FSIZE_MASK);
+    C1FIFOCON0 = (((32UL - 1UL) << _C1FIFOCON0_FSIZE_POSITION) & _C1FIFOCON0_FSIZE_MASK) | _C1FIFOCON0_TXEN_MASK | ((0x0UL << _C1FIFOCON0_TXPRI_POSITION) & _C1FIFOCON0_TXPRI_MASK) | ((0x0UL << _C1FIFOCON0_RTREN_POSITION) & _C1FIFOCON0_RTREN_MASK);
+    C1FIFOCON1 = (((32UL - 1UL) << _C1FIFOCON1_FSIZE_POSITION) & _C1FIFOCON1_FSIZE_MASK);
 
     /* Configure CAN Filters */
     C1RXF0 = (0UL & CAN_MSG_SID_MASK) << _C1RXF0_SID_POSITION;
@@ -157,6 +157,10 @@ void CAN1_Initialize(void)
 
     /* Configure CAN Acceptance Filter Masks */
     C1RXM0 = (0UL & CAN_MSG_SID_MASK) << _C1RXM0_SID_POSITION;
+
+    /* Enable Timestamp */
+    C1CONSET = _C1CON_CANCAP_MASK;
+    C1TMR = 0U & _C1TMR_CANTSPRE_MASK;
 
     /* Set Interrupts */
     IEC1SET = _IEC1_CAN1IE_MASK;

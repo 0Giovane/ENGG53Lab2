@@ -26,7 +26,7 @@ void I2cEeprom::write(uint16_t address, uint8_t* data, uint16_t size)
 
     I2C1_Write(EEPROM_ADDRESS, buffer, size + 2);
 
-    while (!transfer_done);
+    //while (!transfer_done);
     
     CORETIMER_DelayMs(20);
 }
@@ -41,7 +41,7 @@ void I2cEeprom::read(uint16_t address, uint8_t* data, uint16_t size)
 
     I2C1_WriteRead(EEPROM_ADDRESS, addr_bytes, 2, data, size);
 
-    while (!transfer_done);
+    //while (!transfer_done);
     CORETIMER_DelayMs(20);
 }
 
@@ -78,7 +78,7 @@ void I2cEeprom::deleteAtAddress(uint16_t address)
 
     transfer_done = false;
     I2C1_Write(EEPROM_ADDRESS, buffer, EEPROM_USER_SIZE + 2);
-    while (!transfer_done);
+    //while (!transfer_done);
 
     CORETIMER_DelayMs(20);
 }

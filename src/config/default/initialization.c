@@ -54,8 +54,8 @@
 // ****************************************************************************
 
 /*** DEVCFG0 ***/
-#pragma config DEBUG =      OFF
-#pragma config ICESEL =     ICS_PGx1
+#pragma config DEBUG =      ON
+#pragma config ICESEL =     ICS_PGx2
 #pragma config PWP =        OFF
 #pragma config BWP =        OFF
 #pragma config CP =         OFF
@@ -175,7 +175,7 @@ void SYS_Initialize ( void* data )
 	GPIO_Initialize();
 
     CORETIMER_Initialize();
-    //I2C1_Initialize();
+    I2C1_Initialize();
 	UART2_Initialize();
 
     CAN1_Initialize();

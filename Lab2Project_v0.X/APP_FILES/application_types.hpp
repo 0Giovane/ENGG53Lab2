@@ -37,6 +37,13 @@ typedef struct
 
 typedef enum
 {
+    UPDATE,
+    ADD,
+    DEL        
+} commandType_t;
+
+typedef enum
+{
   INITIAL          = 0,
   AUTHENTICATOR,
   ADMIN_MENU,

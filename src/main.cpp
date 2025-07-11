@@ -33,6 +33,7 @@
 #include "../Lab2Project_v0.X/APP_FILES/application_types.hpp"
 #include "../Lab2Project_v0.X/APP_FILES/application.hpp"
 #include "../Lab2Project_v0.X/APP_FILES/keypad.hpp"
+#include "../Lab2Project_v0.X/APP_FILES/can_protocol.hpp"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -43,21 +44,24 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
+    
+    CanProtocol CAN;
     I2cEeprom MEMORY;
     LcdDrvSt7920 DISPLAY;
     Keypad KEYPAD;
     DebugUart DEBUG_UART (UART2);
-    //Can CAN;
-    Application APP(MEMORY, DISPLAY, KEYPAD, DEBUG_UART);
+
+    Application APP(CAN, MEMORY, DISPLAY, KEYPAD, DEBUG_UART);
     APP.init();
     CORETIMER_DelayMs(20);
     APP.run();
     //APP.runKeypadTest();
+    //APP.runCanProtocolTest();
+    
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
-       
     }
 
     /* Execution should not come here during normal operation */

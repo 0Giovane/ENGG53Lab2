@@ -16,16 +16,20 @@
 #include "lcd_drv_st7920.hpp"
 #include "keypad.hpp"
 #include <string>
+#include "can_protocol.hpp"
 
 class Application
 {
 public:
-    Application(I2cEeprom memory, LcdDrvSt7920 lcd, Keypad keypad, DebugUart debug_uart);
+    Application(CanProtocol can_protocol, I2cEeprom memory, LcdDrvSt7920 lcd, Keypad keypad, DebugUart debug_uart);
+    
     void init();
     void run();
     void runKeypadTest();
+    void runCanProtocolTest();
    
 private:
+    CanProtocol m_can_protocol;
     I2cEeprom m_memory;
     LcdDrvSt7920 m_lcd;
     Keypad m_keypad;
