@@ -27,12 +27,8 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 
-#include "../Lab2Project_v0.X/APP_FILES/i2c_eeprom.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/lcd_drv_st7920.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/keypad.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/can_protocol.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/debug_uart.hpp"
-#include "../Lab2Project_v0.X/APP_FILES/application.hpp"
+#include "../APP_FILES/application.hpp"
+#include "../APP_FILES/EXAMPLES/examples.hpp"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -44,23 +40,15 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     
-    I2cEeprom MEMORY;
-    LcdDrvSt7920 DISPLAY;
-    Keypad KEYPAD;
-    CanProtocol CAN;
-    DebugUart DEBUG_UART;
-
-    Application APP(MEMORY, DISPLAY, KEYPAD, CAN, DEBUG_UART);
-    APP.init();
-    CORETIMER_DelayMs(20);
-    //APP.run();
- 
-    //APP.runKeypadTest();
-    //APP.runCanProtocolTest();
-    //APP.runDebugUartTest();
-    //APP.runPackUnpackDebugTest();
-    APP.runCanEepromDebugTest();
-
+    /* Run user access control application */
+//    application();
+    
+    /* Run unit tests */
+//    keypadTest();
+    debugUartTest();
+//    codecUserTest();
+//    canProtocolTest();
+//    canEepromTest();
     
     while ( true )
     {

@@ -5,21 +5,49 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="APP_FILES" displayName="APP_FILES" projectFiles="true">
-        <itemPath>APP_FILES/lcd_drv_st7920.hpp</itemPath>
-        <itemPath>APP_FILES/lcd_drv_st7920.cpp</itemPath>
-        <itemPath>APP_FILES/debug_uart.cpp</itemPath>
-        <itemPath>APP_FILES/debug_uart.hpp</itemPath>
-        <itemPath>APP_FILES/i2c_eeprom.cpp</itemPath>
-        <itemPath>APP_FILES/i2c_eeprom.hpp</itemPath>
+        <logicalFolder name="f3" displayName="COMMONS" projectFiles="true">
+          <itemPath>APP_FILES/COMMONS/commons.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="DEVICES" projectFiles="true">
+          <itemPath>APP_FILES/DEVICES/can_protocol.cpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/can_protocol.hpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/debug_uart.cpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/debug_uart.hpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/eeprom_24cxx.cpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/eeprom_24cxx.hpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/keypad.cpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/keypad.hpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/devices.hpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/lcd_12864.cpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/lcd_12864.hpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/door_lock.cpp</itemPath>
+          <itemPath>APP_FILES/DEVICES/door_lock.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f1" displayName="DRIVERS" projectFiles="true">
+          <itemPath>APP_FILES/DRIVERS/lcd_drv_st7920.cpp</itemPath>
+          <itemPath>APP_FILES/DRIVERS/lcd_drv_st7920.hpp</itemPath>
+          <itemPath>APP_FILES/DRIVERS/drivers.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f5" displayName="EXAMPLES" projectFiles="true">
+          <itemPath>APP_FILES/EXAMPLES/examples.hpp</itemPath>
+          <itemPath>APP_FILES/EXAMPLES/can_eeprom_test.cpp</itemPath>
+          <itemPath>APP_FILES/EXAMPLES/can_protocol_test.cpp</itemPath>
+          <itemPath>APP_FILES/EXAMPLES/codec_user_test.cpp</itemPath>
+          <itemPath>APP_FILES/EXAMPLES/keypad_test.cpp</itemPath>
+          <itemPath>APP_FILES/EXAMPLES/debug_uart_test.cpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f6" displayName="LIBRARIES" projectFiles="true">
+          <itemPath>APP_FILES/LIBRARIES/libraries.hpp</itemPath>
+          <itemPath>APP_FILES/LIBRARIES/user_manager.cpp</itemPath>
+          <itemPath>APP_FILES/LIBRARIES/user_manager.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f4" displayName="UTILS" projectFiles="true">
+          <itemPath>APP_FILES/UTILS/utils.hpp</itemPath>
+          <itemPath>APP_FILES/UTILS/codec_user.cpp</itemPath>
+          <itemPath>APP_FILES/UTILS/delay.cpp</itemPath>
+        </logicalFolder>
         <itemPath>APP_FILES/application.cpp</itemPath>
         <itemPath>APP_FILES/application.hpp</itemPath>
-        <itemPath>APP_FILES/keypad.hpp</itemPath>
-        <itemPath>APP_FILES/keypad.cpp</itemPath>
-        <itemPath>APP_FILES/can_protocol.hpp</itemPath>
-        <itemPath>APP_FILES/can_protocol.cpp</itemPath>
-        <itemPath>APP_FILES/commons.hpp</itemPath>
-        <itemPath>APP_FILES/utils.cpp</itemPath>
-        <itemPath>APP_FILES/utils.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">
@@ -125,6 +153,13 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>APP_FILES</Elem>
+    <Elem>APP_FILES/DRIVERS</Elem>
+    <Elem>APP_FILES/DEVICES</Elem>
+    <Elem>APP_FILES/LIBRARIES</Elem>
+    <Elem>APP_FILES/COMMONS</Elem>
+    <Elem>APP_FILES/UTILS</Elem>
+    <Elem>APP_FILES/EXAMPLES</Elem>
+    <Elem>src</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -296,7 +331,8 @@
         <property key="use-indirect-calls" value="false"/>
       </C32CPP>
       <C32Global>
-        <property key="common-include-directories" value="APP_FILES"/>
+        <property key="common-include-directories"
+                  value="APP_FILES;APP_FILES\DRIVERS;APP_FILES\DEVICES;APP_FILES\COMMONS;APP_FILES\UTILS;APP_FILES\EXAMPLES;APP_FILES\UTILS"/>
         <property key="gp-relative-option" value=""/>
         <property key="legacy-libc" value="true"/>
         <property key="mdtcm" value=""/>
@@ -362,7 +398,6 @@
         <property key="event.recorder.debugger.behavior" value="Running"/>
         <property key="event.recorder.enabled" value="false"/>
         <property key="event.recorder.scvd.files" value=""/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="lastid" value=""/>
         <property key="memories.aux" value="false"/>

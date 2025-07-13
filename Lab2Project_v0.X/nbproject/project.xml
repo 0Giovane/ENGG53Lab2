@@ -10,6 +10,13 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>APP_FILES</sourceRootElem>
+                <sourceRootElem>APP_FILES/DRIVERS</sourceRootElem>
+                <sourceRootElem>APP_FILES/DEVICES</sourceRootElem>
+                <sourceRootElem>APP_FILES/LIBRARIES</sourceRootElem>
+                <sourceRootElem>APP_FILES/COMMONS</sourceRootElem>
+                <sourceRootElem>APP_FILES/UTILS</sourceRootElem>
+                <sourceRootElem>APP_FILES/EXAMPLES</sourceRootElem>
+                <sourceRootElem>src</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
