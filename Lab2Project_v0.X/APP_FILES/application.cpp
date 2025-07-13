@@ -10,7 +10,7 @@ void application()
     CanProtocol can_protocol;           can_protocol.init();
     DebugUart debug_uart;               debug_uart.init();      // ATTENTION!! baudrate = 115200
 
-    UserManager user_manager(door_lock, display, keypad, memory, can_protocol);
+    UserManager user_manager(door_lock, display, keypad, memory, can_protocol, debug_uart);
     user_manager.init();
     
     while ( true )

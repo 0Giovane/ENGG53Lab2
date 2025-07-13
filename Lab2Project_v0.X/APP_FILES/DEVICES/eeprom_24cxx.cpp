@@ -16,6 +16,11 @@ void Eeprom24cxx::init()
     registerCallback();
 }
 
+void Eeprom24cxx::update()
+{
+    
+}
+
 bool Eeprom24cxx::writeToIndex(uint16_t index, const void* w_data, uint16_t size)
 {
     if (index >= MAX_INDEX || size > SLOT_SIZE) return false;

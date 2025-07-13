@@ -41,11 +41,11 @@ int main ( void )
     SYS_Initialize ( NULL );
     
     /* Run user access control application */
-//    application();
+    application();
     
     /* Run unit tests */
 //    keypadTest();
-    debugUartTest();
+//    debugUartTest();
 //    codecUserTest();
 //    canProtocolTest();
 //    canEepromTest();

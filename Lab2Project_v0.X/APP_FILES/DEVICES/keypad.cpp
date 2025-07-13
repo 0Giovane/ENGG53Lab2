@@ -65,6 +65,11 @@ void Keypad::init()
     registerCallback();
 }
 
+void Keypad::update()
+{
+    
+}
+
 void Keypad::registerCallback()
 {
     GPIO_PinInterruptCallbackRegister(CN8_PIN, cnCallback, 0);

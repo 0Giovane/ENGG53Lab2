@@ -27,28 +27,55 @@ typedef enum
           
 } state_t;
 
+typedef enum 
+{
+    NONE,
+    LOGIN,
+    PASSWORD
+            
+} inputPhase_t;
+
 class UserManager
 {
 public:
-    UserManager(DoorLock& door_lock, Lcd12864& display, Keypad& keypad, Eeprom24cxx& memory, CanProtocol& can_protocol);
+    UserManager(DoorLock& door_lock, Lcd12864& display, Keypad& keypad, Eeprom24cxx& memory, CanProtocol& can_protocol, DebugUart& debug_uart);
     
     void init();
-    void update();
+    void update(); //run fsm
     
-    void getInputUserFromUart(char* buffer, size_t max_length, bool mask);
     bool checkUser(user_t& user);
-    bool saveUser(user_t& user);    
+    bool saveUser(user_t& user);
+
+    void setDisplayMessageToUser();
+    void getKeypadInputUser();  
+    void readUserInputNonBlocking();
+    void setAuthorization();
     
 private:
-    DoorLock* m_door_lock;
-    Lcd12864* m_display;
-    Keypad* m_keypad;
-    Eeprom24cxx* m_memory;
-    CanProtocol* m_can_protocol;
-    DebugUart* m_debug_uart;
+    DoorLock& m_door_lock;
+    Lcd12864& m_display;
+    Keypad& m_keypad;
+    Eeprom24cxx& m_memory;
+    CanProtocol& m_can_protocol;
+    DebugUart& m_debug_uart;
     
-    state_t current_state;
-    state_t next_state;
+    user_t m_user;
+    
+    state_t m_current_state;
+    state_t m_next_state;
+    
+    char m_input_buffer[USER_PASSWORD_SIZE + 1];  // temp buffer
+    size_t m_input_index;
+    uint16_t m_input_display_pos;
+    bool m_input_mask;
+    inputPhase_t m_input_phase;
+    
+    void handleInitialState();
+    void handleAuthenticatorState();
+    void handleAdminMenuState();
+    void handleRegisterUserState();
+    void handleDeleteUserState();
+    void handleUserAccessState();
     
 };
 

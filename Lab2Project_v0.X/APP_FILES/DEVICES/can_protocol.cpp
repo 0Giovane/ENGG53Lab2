@@ -23,6 +23,11 @@ void CanProtocol::init()
     CAN1_InterruptGet(CAN_FIFO_RX, CAN_FIFO_INTERRUPT_RXNEMPTYIF_MASK);
 }
 
+void CanProtocol::update()
+{
+    
+}
+
 void CanProtocol::registerCallbacks()
 {
     CAN1_CallbackRegister(CanProtocol::txCallback, (uintptr_t)this, CAN_FIFO_TX);

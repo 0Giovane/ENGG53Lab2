@@ -1,5 +1,4 @@
 #include <xc.h>
-#include <string.h>
 #include "definitions.h"
 #include "debug_uart.hpp"
 
@@ -15,7 +14,7 @@ void DebugUart::rxCallback(uintptr_t context)
     self->m_rx_done = true;
 }
 
-DebugUart::DebugUart(): m_tx_done(false), m_rx_done(false){}
+DebugUart::DebugUart(): m_tx_done(false), m_rx_done(false),m_tx_index(0), m_tx_length(0), m_transmitting(false){}
 
 void DebugUart::init() 
 {
@@ -76,5 +75,37 @@ void DebugUart::resetRxFlag()
     m_rx_done = false; 
 }
 
+void DebugUart::print(const char* str)
+{
+    size_t len = strlen(str);
+    if (len == 0 || len >= UART_TX_BUFFER_SIZE)
+        return;
+
+    if (!m_transmitting) {
+        memcpy(m_tx_buffer, str, len);
+        m_tx_length = len;
+        m_tx_index = 0;
+        m_transmitting = true;
+        m_tx_done = false;
+
+        write(reinterpret_cast<uint8_t*>(&m_tx_buffer[0]), 1);
+    }
+}
+
+void DebugUart::update()
+{
+    if (m_transmitting && m_tx_done) {
+        m_tx_index++;
+
+        if (m_tx_index < m_tx_length) {
+            m_tx_done = false;
+            write(reinterpret_cast<uint8_t*>(&m_tx_buffer[m_tx_index]), 1);
+        } else {
+            m_transmitting = false;
+            m_tx_index = 0;
+            m_tx_length = 0;
+        }
+    }
+}
 
 

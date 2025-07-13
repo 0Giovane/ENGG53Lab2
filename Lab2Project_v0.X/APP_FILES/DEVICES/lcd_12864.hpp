@@ -21,13 +21,14 @@ public:
     void update();
     
     void clear();
+    //TODO: void clearLine(uint16_t row_col, const char* str);
     void writeString(uint16_t row_col, const char* str);
     void writeChar(uint16_t row_col, uint8_t ascii);
     
     inline static uint16_t rowCol(uint8_t row, uint8_t col) { return (row << 8) | col; }
     
 private:
-    LcdDrvSt7920 m_lcd_driver;
+    LcdDrvSt7920& m_lcd_driver;
     
     void setTextAddress(uint16_t row_col);
 };

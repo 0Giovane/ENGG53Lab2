@@ -66,7 +66,7 @@ typedef enum
   LINE_2 = 0x0100,
   LINE_3 = 0x0200,
   LINE_4 = 0x0300           
-} LinePositionScren_t;
+} LinePositionScreen_t;
 
 #endif	/* COMMONS_HPP */
 

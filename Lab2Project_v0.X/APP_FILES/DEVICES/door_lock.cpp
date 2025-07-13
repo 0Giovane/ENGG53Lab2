@@ -9,6 +9,11 @@ void DoorLock::init()
     LED_TEST_Clear();
 }
 
+void DoorLock::update()
+{
+    
+}
+
 bool DoorLock::open()
 {
     LED_TEST_Set();

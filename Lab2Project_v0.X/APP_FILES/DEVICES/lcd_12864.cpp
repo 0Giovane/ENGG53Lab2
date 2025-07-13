@@ -8,6 +8,12 @@ void Lcd12864::init()
 {
     clear();   
 }
+
+void Lcd12864::update()
+{
+    
+}
+
 void Lcd12864::clear()
 {
     m_lcd_driver.clear();
