@@ -55,10 +55,6 @@ typedef enum
     UPDATE
 } commandType_t ;
 
-#define EEPROM_USER_BASE_ADDR  0x0000
-#define EEPROM_USER_SIZE sizeof(packedUser_t)
-#define EEPROM_USER_ADDR(index) (EEPROM_USER_BASE_ADDR + ((index) * EEPROM_USER_SIZE))
-
 /* LCD Display */
 typedef enum
 {

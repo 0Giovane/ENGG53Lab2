@@ -24,8 +24,6 @@ void application()
         door_lock.update();
         can_protocol.update();
         
-        debug_uart.update();
-
         user_manager.update();
         
     }

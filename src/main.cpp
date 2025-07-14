@@ -41,20 +41,21 @@ int main ( void )
     SYS_Initialize ( NULL );
     
     /* Run user access control application */
-    application();
+//    application();
     
     /* Run unit tests */
 //    keypadTest();
 //    debugUartTest();
 //    codecUserTest();
-//    canProtocolTest();
-//    canEepromTest();
+//    canProtocolTest();  
+    eepromTest();
+
     
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
-            
+                    
     }
 
     /* Execution should not come here during normal operation */

@@ -30,11 +30,11 @@
         </logicalFolder>
         <logicalFolder name="f5" displayName="EXAMPLES" projectFiles="true">
           <itemPath>APP_FILES/EXAMPLES/examples.hpp</itemPath>
-          <itemPath>APP_FILES/EXAMPLES/can_eeprom_test.cpp</itemPath>
           <itemPath>APP_FILES/EXAMPLES/can_protocol_test.cpp</itemPath>
           <itemPath>APP_FILES/EXAMPLES/codec_user_test.cpp</itemPath>
           <itemPath>APP_FILES/EXAMPLES/keypad_test.cpp</itemPath>
           <itemPath>APP_FILES/EXAMPLES/debug_uart_test.cpp</itemPath>
+          <itemPath>APP_FILES/EXAMPLES/eeprom_test.cpp</itemPath>
         </logicalFolder>
         <logicalFolder name="f6" displayName="LIBRARIES" projectFiles="true">
           <itemPath>APP_FILES/LIBRARIES/libraries.hpp</itemPath>
@@ -398,6 +398,7 @@
         <property key="event.recorder.debugger.behavior" value="Running"/>
         <property key="event.recorder.enabled" value="false"/>
         <property key="event.recorder.scvd.files" value=""/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="lastid" value=""/>
         <property key="memories.aux" value="false"/>

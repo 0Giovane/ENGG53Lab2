@@ -21,6 +21,7 @@ void debugUartTest();
 void codecUserTest();
 void canProtocolTest();
 void canEepromTest();
+void eepromTest();
 
 // TODO: realizar testes para display, tranca, etc.
 

@@ -82,17 +82,17 @@ void UserManager::handleAdminMenuState()
 
 void UserManager::handleRegisterUserState()
 {
-    m_debug_uart.print("\r\nProcessando estado de registro do usuário !\r\n");
+    m_debug_uart.print("\r\nProcessando estado de registro do usuario !\r\n");
 }
 
 void UserManager::handleDeleteUserState()
 {
-    m_debug_uart.print("\r\nProcessando estado de deletar usuário!\r\n");
+    m_debug_uart.print("\r\nProcessando estado de deletar usuario!\r\n");
 }
 
 void UserManager::handleUserAccessState()
 {
-    m_debug_uart.print("\r\nProcessando estado de acesso do usuário!\r\n");
+    m_debug_uart.print("\r\nProcessando estado de acesso do usuario!\r\n");
     setDisplayMessageToUser();
 }
 

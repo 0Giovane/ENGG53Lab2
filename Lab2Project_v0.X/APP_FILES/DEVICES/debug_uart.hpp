@@ -6,48 +6,46 @@
  */
 
 #ifndef DEBUG_UART_HPP
-#define	DEBUG_UART_HPP
+#define DEBUG_UART_HPP
 
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
 
-static constexpr size_t UART_TX_BUFFER_SIZE = 256;
+#define UART_TX_BUFFER_SIZE 256
 
 class DebugUart
 {
 public:
     DebugUart();
-    
+
     void init();
-    void update();
-    
-    void print(const char* str);
-    
-    bool read(uint8_t *rx_buffer, uint16_t size);
-    bool write(uint8_t *tx_buffer, uint16_t size);
-        
-    bool byteRead(uint8_t* byte);
-    
-    bool isTxDone();
-    bool isRxDone();
-    void setTxFlag();
-    void setRxFlag();
-    void resetTxFlag();
-    void resetRxFlag();
-    
+    bool write(uint8_t* tx_data, uint16_t size); 
+    bool read (uint8_t* rx_data, uint16_t size); 
+    bool byteRead(uint8_t* byte);            
+
+    void print (const char* str);
+    void printf(const char* fmt, ...);
+
+    bool isTxDone() const;   
+    bool isRxDone() const;   
+    bool isBusy () const;    
+
+    void resetTxFlag();     
+    void resetRxFlag();      
+
 private:
     volatile bool m_tx_done;
     volatile bool m_rx_done;
+    bool m_transmitting;
+    bool m_receiving;
     
     char m_tx_buffer[UART_TX_BUFFER_SIZE];
-    size_t m_tx_index;
-    size_t m_tx_length;
-    bool m_transmitting;
-    
-    static void rxCallback(uintptr_t context);
+
     static void txCallback(uintptr_t context);
+    static void rxCallback(uintptr_t context);
     void registerCallbacks();
 };
 
-#endif	/* DEBUG_UART_HPP */
-
+#endif /* DEBUG_UART_HPP */
