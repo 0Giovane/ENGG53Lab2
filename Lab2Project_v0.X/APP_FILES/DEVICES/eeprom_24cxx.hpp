@@ -22,13 +22,13 @@
 
 typedef enum 
 {
-    IDLE,
-    WRITE_START,     
-    WRITE_WAIT_BUS, 
-    WRITE_WAIT_CYCLE,
-    READ_START,      
-    READ_WAIT,       
-    ERROR            
+    EEPROM_IDLE,
+    EEPROM_WRITE_START,     
+    EEPROM_WRITE_WAIT_BUS, 
+    EEPROM_WRITE_WAIT_CYCLE,
+    EEPROM_READ_START,      
+    EEPROM_READ_WAIT,       
+    EEPROM_ERROR            
 } eepromState_t;
 
 class Eeprom24cxx

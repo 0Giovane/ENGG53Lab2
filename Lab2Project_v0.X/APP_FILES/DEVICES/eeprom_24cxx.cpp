@@ -11,7 +11,7 @@ void Eeprom24cxx::callback(uintptr_t context)
 
 Eeprom24cxx::Eeprom24cxx():
     m_transfer_done(true),
-    m_current_state(IDLE),
+    m_current_state(EEPROM_IDLE),
     m_delay_counter(0),
     m_current_address(0),
     m_data_size(0),
@@ -50,7 +50,7 @@ bool Eeprom24cxx::readFromIndex(uint16_t index, void* r_data, uint16_t size)
 
 bool Eeprom24cxx::write(uint16_t address, const uint8_t* data, uint16_t size)
 {
-    if (m_current_state != IDLE)
+    if (m_current_state != EEPROM_IDLE)
     {
         return false;
     }
@@ -63,13 +63,13 @@ bool Eeprom24cxx::write(uint16_t address, const uint8_t* data, uint16_t size)
     memcpy(&m_buffer[2], data, size);
 
     m_transfer_done  = false;
-    m_current_state  = WRITE_START;
+    m_current_state  = EEPROM_WRITE_START;
     return true;
 }
 
 bool Eeprom24cxx::read(uint16_t address, uint8_t* data, uint16_t size)
 {
-    if (m_current_state != IDLE)
+    if (m_current_state != EEPROM_IDLE)
     {
         return false;
     }
@@ -82,7 +82,7 @@ bool Eeprom24cxx::read(uint16_t address, uint8_t* data, uint16_t size)
     m_buffer[1] = static_cast<uint8_t>(address & 0xFF);
 
     m_transfer_done  = false;
-    m_current_state  = READ_START;
+    m_current_state  = EEPROM_READ_START;
     return true;
 }
 
@@ -90,65 +90,65 @@ void Eeprom24cxx::update()
 {
     switch (m_current_state)
     {
-        case WRITE_START:
+        case EEPROM_WRITE_START:
         {
             if (I2C1_Write(I2C_EEPROM_ADDRESS, m_buffer, m_data_size + 2))
             {
-                m_current_state = WRITE_WAIT_BUS;
+                m_current_state = EEPROM_WRITE_WAIT_BUS;
             }
             else
             {
-                m_current_state = ERROR;      
+                m_current_state = EEPROM_ERROR;      
             }
             break;
         }
-        case WRITE_WAIT_BUS:
+        case EEPROM_WRITE_WAIT_BUS:
         {
             if (m_transfer_done)              
             {
                 m_delay_counter = 0;          
-                m_current_state = WRITE_WAIT_CYCLE;
+                m_current_state = EEPROM_WRITE_WAIT_CYCLE;
             }
             break;
         }
-        case WRITE_WAIT_CYCLE:
+        case EEPROM_WRITE_WAIT_CYCLE:
         {
             if (++m_delay_counter >= EEPROM_WRITE_DELAY_MS)
             {
-                m_current_state = IDLE;       
+                m_current_state = EEPROM_IDLE;       
             }
             break;
         }
-        case READ_START:
+        case EEPROM_READ_START:
         {
             if (I2C1_WriteRead(I2C_EEPROM_ADDRESS, m_buffer, 2, m_target_buffer, m_data_size))
             {
-                m_current_state = READ_WAIT;
+                m_current_state = EEPROM_READ_WAIT;
             }
             else
             {
-                m_current_state = ERROR;
+                m_current_state = EEPROM_ERROR;
             }
             break;
         }
-        case READ_WAIT:
+        case EEPROM_READ_WAIT:
         {
             if (m_transfer_done)              
             {
-                m_current_state = IDLE;
+                m_current_state = EEPROM_IDLE;
             }
             break;
         }
-        default: IDLE; break;
+        default: EEPROM_IDLE; break;
     }
 }
 
 bool Eeprom24cxx::isBusy() const
 {
-    return m_current_state != IDLE;
+    return m_current_state != EEPROM_IDLE;
 }
 
 bool Eeprom24cxx::hasError() const
 { 
-    return m_current_state == ERROR; 
+    return m_current_state == EEPROM_ERROR; 
 }

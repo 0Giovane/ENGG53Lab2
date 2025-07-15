@@ -35,6 +35,8 @@
           <itemPath>APP_FILES/EXAMPLES/keypad_test.cpp</itemPath>
           <itemPath>APP_FILES/EXAMPLES/debug_uart_test.cpp</itemPath>
           <itemPath>APP_FILES/EXAMPLES/eeprom_test.cpp</itemPath>
+          <itemPath>APP_FILES/EXAMPLES/can_eeprom_test.cpp</itemPath>
+          <itemPath>APP_FILES/EXAMPLES/door_lock_test.cpp</itemPath>
         </logicalFolder>
         <logicalFolder name="f6" displayName="LIBRARIES" projectFiles="true">
           <itemPath>APP_FILES/LIBRARIES/libraries.hpp</itemPath>
@@ -204,6 +206,10 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
+      <item path="APP_FILES/EXAMPLES/can_protocol_test.cpp"
+            ex="true"
+            overriding="false">
+      </item>
       <C32>
         <property key="additional-warnings" value="true"/>
         <property key="addresss-attribute-use" value="false"/>

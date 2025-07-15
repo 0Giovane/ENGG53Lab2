@@ -22,8 +22,9 @@ void codecUserTest();
 void canProtocolTest();
 void canEepromTest();
 void eepromTest();
+void doorLockTest();
 
-// TODO: realizar testes para display, tranca, etc.
+// TODO: realizar testes para display, keypad
 
 #endif	/* EXAMPLES_HPP */
 
