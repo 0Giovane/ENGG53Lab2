@@ -12,13 +12,14 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define I2C_EEPROM_ADDRESS      0x50 /* eeprom 24C64N */
+#define I2C_EEPROM_ADDRESS      0x50  /* eeprom 24C64N */
 #define EEPROM_SIZE_BYTES       8192 /* 64 Kbits*/
 #define EEPROM_PAGE_SIZE        32   /* bytes */
-#define EEPROM_BASE_ADDRESS     0x0000
+#define EEPROM_BASE_ADDRESS     0x0004
 #define EEPROM_SLOT_SIZE        16
 #define EEPROM_MAX_INDEX        512 /*(EEPROM_SIZE_BYTES / EEPROM_SLOT_SIZE)*/
 #define EEPROM_WRITE_DELAY_MS   5
+#define EEPROM_ACK_TIMEOUT      100
 
 typedef enum 
 {
@@ -42,6 +43,7 @@ public:
     bool writeToIndex(uint16_t index, const void* w_data, uint16_t size);
     bool readFromIndex (uint16_t index, void*   r_data, uint16_t size);
 
+    bool isIdle() const; //Apagar em prod
     bool isBusy () const;        
     bool hasError() const;
 
@@ -59,6 +61,7 @@ private:
     static void callback(uintptr_t context);
     void   registerCallback();
 
+    bool checkAck();
     bool write(uint16_t address, const uint8_t* data, uint16_t size);
     bool read (uint16_t address,       uint8_t* data, uint16_t size);
 };

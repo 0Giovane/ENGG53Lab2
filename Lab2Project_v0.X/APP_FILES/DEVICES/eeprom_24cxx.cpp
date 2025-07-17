@@ -7,6 +7,8 @@ void Eeprom24cxx::callback(uintptr_t context)
 {
     Eeprom24cxx* self = reinterpret_cast<Eeprom24cxx*>(context);
     self->m_transfer_done = true;
+    //LED_L2_Toggle();
+    
 }
 
 Eeprom24cxx::Eeprom24cxx():
@@ -88,11 +90,14 @@ bool Eeprom24cxx::read(uint16_t address, uint8_t* data, uint16_t size)
 
 void Eeprom24cxx::update()
 {
+    
     switch (m_current_state)
     {
         case EEPROM_WRITE_START:
         {
-            if (I2C1_Write(I2C_EEPROM_ADDRESS, m_buffer, m_data_size + 2))
+            
+            bool ok = I2C1_Write(I2C_EEPROM_ADDRESS, m_buffer, m_data_size + 2);
+            if (ok)
             {
                 m_current_state = EEPROM_WRITE_WAIT_BUS;
             }
@@ -102,25 +107,42 @@ void Eeprom24cxx::update()
             }
             break;
         }
+
         case EEPROM_WRITE_WAIT_BUS:
+    {
+        if (m_transfer_done)
+    {
+        if (checkAck())
         {
-            if (m_transfer_done)              
-            {
-                m_delay_counter = 0;          
-                m_current_state = EEPROM_WRITE_WAIT_CYCLE;
-            }
-            break;
+            LED_L1_Set(); 
+            m_current_state = EEPROM_IDLE; // Tudo certo!
         }
-        case EEPROM_WRITE_WAIT_CYCLE:
+        else
         {
-            if (++m_delay_counter >= EEPROM_WRITE_DELAY_MS)
-            {
-                m_current_state = EEPROM_IDLE;       
-            }
-            break;
+            m_current_state = EEPROM_WRITE_WAIT_CYCLE; // Vai tentar novamente
+            m_delay_counter = 0;
         }
+    }
+            break;
+}
+       case EEPROM_WRITE_WAIT_CYCLE:
+        {
+        
+
+        if (++m_delay_counter >= EEPROM_ACK_TIMEOUT)
+        {
+            LED_L2_Set(); // OK, debug
+            m_current_state = EEPROM_ERROR;
+        }
+        else if (checkAck())
+        {
+        m_current_state = EEPROM_IDLE;
+        }
+        break;
+    }
         case EEPROM_READ_START:
         {
+            LED_L3_Set();
             if (I2C1_WriteRead(I2C_EEPROM_ADDRESS, m_buffer, 2, m_target_buffer, m_data_size))
             {
                 m_current_state = EEPROM_READ_WAIT;
@@ -131,8 +153,9 @@ void Eeprom24cxx::update()
             }
             break;
         }
-        case EEPROM_READ_WAIT:
+        case EEPROM_READ_WAIT:   
         {
+            LED_L4_Set();
             if (m_transfer_done)              
             {
                 m_current_state = EEPROM_IDLE;
@@ -143,6 +166,12 @@ void Eeprom24cxx::update()
     }
 }
 
+bool Eeprom24cxx::checkAck()
+{
+    uint8_t dummy = 0x00;
+    return I2C1_Write(I2C_EEPROM_ADDRESS, &dummy, 1);
+}
+
 bool Eeprom24cxx::isBusy() const
 {
     return m_current_state != EEPROM_IDLE;
@@ -151,4 +180,10 @@ bool Eeprom24cxx::isBusy() const
 bool Eeprom24cxx::hasError() const
 { 
     return m_current_state == EEPROM_ERROR; 
+}
+
+bool Eeprom24cxx::isIdle() const //APagar ewm prod
+{
+    uint8_t dummy = 0x00;
+    return I2C1_Write(I2C_EEPROM_ADDRESS, &dummy, 1);
 }

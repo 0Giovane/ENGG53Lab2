@@ -27,6 +27,11 @@ void eepromTest()
         SYS_Tasks ( );
         
         memory.update();
+
+                if (memory.isIdle() && state == TEST_READ_WAIT)
+        {
+            LED_L4_Set(); 
+        }
         
         switch (state)
         {
@@ -41,7 +46,7 @@ void eepromTest()
                     state = TEST_ERROR;
                 }
                 break;
-            }
+}
             case TEST_WRITE_WAIT:
             {
                 if (!memory.isBusy())
@@ -64,6 +69,7 @@ void eepromTest()
             }
             case TEST_READ_WAIT:
             {
+                delayMs(20);
                 if (!memory.isBusy())
                 {
                     state = TEST_DONE;

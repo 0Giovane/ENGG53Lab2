@@ -48,8 +48,8 @@ int main ( void )
 //    debugUartTest();
 //    codecUserTest();
 //    canProtocolTest();  
-//    eepromTest();
-    canEepromTest();
+   eepromTest();
+//    canEepromTest();
 //    doorLockTest();
      
      
