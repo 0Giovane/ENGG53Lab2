@@ -53,6 +53,7 @@ void UserManager::handleInitialState()
 {
     m_debug_uart.print("\r\nProcessando estado inicial!\r\n");
     mockUsersToEeprom(m_memory,m_debug_uart); 
+    debugListAllUsers(); //Printa lista de all users na UART
     setDisplayMessageToUser();
     getKeypadInputUser();
 }
@@ -378,5 +379,31 @@ void UserManager::mockUsersToEeprom(Eeprom24cxx& memory, DebugUart& uart)
         }
 
         delayMs(10); // pequeno delay entre escritas (pode ajustar)
+    }
+}
+
+void UserManager::debugListAllUsers()
+{
+    m_debug_uart.print("\r\n[DEBUG] Listando usuários EEPROM:\r\n");
+
+    for (uint16_t index = 0; index < EEPROM_USER_MAX; ++index)
+    {
+        packedUser_t packed = {};
+
+        if (!m_memory.readFromIndex(index, &packed, sizeof(packedUser_t)))
+            continue;
+
+        // Ignora slots vazios
+        if (packed.login[0] == 0xFF || packed.login[0] == 0x00)
+            continue;
+
+        user_t u = unpackUser(packed);
+
+        char msg[128];
+        snprintf(msg, sizeof(msg),
+                 "[%03d] Login: %s | Senha: %s | Admin: %d | Blocked: %d | Room: %d\r\n",
+                 index, u.login, u.password, u.is_admin, u.is_blocked, u.last_access);
+
+        m_debug_uart.print(msg);
     }
 }

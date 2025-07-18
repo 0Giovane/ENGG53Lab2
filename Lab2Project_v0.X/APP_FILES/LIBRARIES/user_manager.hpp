@@ -51,6 +51,7 @@ public:
     void readUserInputNonBlocking();
     void setAuthorization();
     void mockUsersToEeprom(Eeprom24cxx& memory, DebugUart& debug_uart);
+    void debugListAllUsers();
     bool checkUser();
     
 private:
