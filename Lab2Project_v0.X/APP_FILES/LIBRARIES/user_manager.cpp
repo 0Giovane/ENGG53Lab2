@@ -16,6 +16,8 @@ UserManager::UserManager(DoorLock& door_lock, Lcd12864& display, Keypad& keypad,
     m_input_display_pos = 0;
     m_input_mask = false;
     m_input_phase = NONE;
+
+    m_go_to_admin_menu = false; // flag to indicate if the user wants to go to admin menu
 }
 
 void UserManager::init()
@@ -60,17 +62,44 @@ void UserManager::handleAuthenticatorState()
     
     setDisplayMessageToUser();
     
-    delayMs(100); //apenas pra debug - não usar assim pra não bloquear os outros devices
+    delayMs(200); //apenas pra debug - nao usar assim pra nao bloquear os outros devices
+
+    if (checkUser(m_user) == false)
+    {
+        m_display.writeString(LINE_2 ,"                    ");
+        m_display.writeString(LINE_3 ,"                    ");
+        m_display.writeString(LINE_1 ,"     SALA 4     ");
+        m_display.writeString(LINE_4, "Acesso Negado!");
+        m_next_state = INITIAL;
+        delayMs(200); // debug only
+        return;
+    }
+
+    if (m_user.is_blocked)
+    {
+        m_display.writeString(LINE_2 ,"                    ");
+        m_display.writeString(LINE_3 ,"                    ");
+        m_display.writeString(LINE_1 ,"     SALA 4     ");
+        m_display.writeString(LINE_4, "Usuario Bloqueado!");
+        m_next_state = INITIAL;
+        delayMs(200); // debug only
+        return;
+    }
+
+    if (m_go_to_admin_menu)
+    {
+        m_next_state = ADMIN_MENU;
+        m_go_to_admin_menu = false; // reset the flag
+        return;
+    }
+
     m_next_state = USER_ACCESS;
-    
-    /*
-     * TODO: implementar caso m_next_state = ADMIN_MENU
-     */
 }
 
 void UserManager::handleAdminMenuState()
 {
     m_debug_uart.print("\r\nProcessando estado de menu do admin!\r\n");
+    setDisplayMessageToUser();
     
     /*
      * TODO: implementar casos para analisando input do teclado:
@@ -83,17 +112,23 @@ void UserManager::handleAdminMenuState()
 void UserManager::handleRegisterUserState()
 {
     m_debug_uart.print("\r\nProcessando estado de registro do usuario !\r\n");
+    setDisplayMessageToUser();
 }
 
 void UserManager::handleDeleteUserState()
 {
     m_debug_uart.print("\r\nProcessando estado de deletar usuario!\r\n");
+    setDisplayMessageToUser();
 }
 
 void UserManager::handleUserAccessState()
 {
     m_debug_uart.print("\r\nProcessando estado de acesso do usuario!\r\n");
     setDisplayMessageToUser();
+    m_door_lock.open(5000);
+    delayMs(200); // debug only
+    m_user = {0}; // reset user data
+    m_next_state = INITIAL; // reset to initial state after access
 }
 
 void UserManager::setDisplayMessageToUser()
@@ -102,9 +137,10 @@ void UserManager::setDisplayMessageToUser()
     {
         case INITIAL: 
         {
-            m_display.writeString(LINE_1 ,"     SALA 4     ");
-            m_display.writeString(LINE_2, "Login:");
-            m_display.writeString(LINE_3, "Senha:");          
+            m_display.writeString(LINE_1 , (std::string("     SALA 4    ") + (m_go_to_admin_menu ? "A" : " ]")).c_str());
+            m_display.writeString(LINE_2, (std::string("Login:") + (m_input_phase == LOGIN || m_input_phase == NONE ? "> ":" " )).c_str());
+            m_display.writeString(LINE_3, (std::string("Senha:") + (m_input_phase == PASSWORD ? "> ":" " )).c_str());
+            m_display.writeString(LINE_4, "                    ");
             break;
         }            
         case AUTHENTICATOR:
@@ -116,9 +152,9 @@ void UserManager::setDisplayMessageToUser()
         case ADMIN_MENU:  
         {
             m_display.writeString(LINE_1 ,"     SALA 4     ");
-            m_display.writeString(LINE_1 ,"[1] Entrar/Sair");
-            m_display.writeString(LINE_2, "[2] Inserir User");
-            m_display.writeString(LINE_3, "[3] Deletar User");
+            m_display.writeString(LINE_2 ,"[1] Entrar/Sair");
+            m_display.writeString(LINE_3, "[2] Inserir User");
+            m_display.writeString(LINE_4, "[3] Deletar User");
             break;
         }
         
@@ -144,26 +180,9 @@ void UserManager::setDisplayMessageToUser()
             * TODO: implementar clearLine em device lcd_12864
             */
             m_display.writeString(LINE_2 ,"                    ");
-            m_display.writeString(LINE_4 ,"                    ");
-            
-            m_user.is_blocked = 1; // only to debug
-
-            if (m_user.is_blocked)
-            {
-                m_display.writeString(LINE_1 ,"     SALA 4     ");
-                m_display.writeString(LINE_3, "Acesso Liberado!");
-                               
-                m_door_lock.open(); // only to debug
-            }
-            else
-            {
-                m_display.writeString(LINE_1 ,"     SALA 4     ");
-                
-                /*
-                 * TODO: (questao de IHM) Tratar tipos de acesso negado. Esta bloqueado? Usuario nao cadastrado?
-                 */
-                m_display.writeString(LINE_3, "Acesso Negado!");
-            }
+            m_display.writeString(LINE_3 ,"                    ");
+            m_display.writeString(LINE_1 ,"     SALA 4     ");
+            m_display.writeString(LINE_4, "Acesso Liberado!");       
             break;
         }
 
@@ -186,7 +205,7 @@ void UserManager::getKeypadInputUser()
         m_debug_uart.print("\r\nLogin: ");
         memset(m_input_buffer, 0, sizeof(m_input_buffer));
         m_input_index = 0;
-        m_input_display_pos = 0x0103;
+        m_input_display_pos = 0x0104;
         m_input_mask = false;
         m_input_phase = LOGIN;
     }
@@ -197,13 +216,26 @@ void UserManager::getKeypadInputUser()
 void UserManager::readUserInputNonBlocking()
 {
     uint8_t ch;
-    if (!m_debug_uart.byteRead(&ch))
+    ch = m_keypad.waitNextKey(); // this is blocking, so it will wait for a key press
+
+    // if (!m_debug_uart.byteRead(&ch))
+    // {
+    //     return;
+    // }
+
+    if (ch == 'A') // A is F1 key
     {
+        m_go_to_admin_menu = !m_go_to_admin_menu; // toggle admin menu flag
         return;
     }
 
-    if (ch == '\r' || ch == '\n')
+    if (ch == '\r' || ch == '\n' || ch == 'D') // D is the down key, enter on keyboard may not work
     {
+        if (m_input_index != 4)
+        {
+            return; // invalid input length
+        }
+
         m_input_buffer[m_input_index] = '\0'; 
 
         if (m_input_phase == LOGIN) 
@@ -211,7 +243,7 @@ void UserManager::readUserInputNonBlocking()
             strncpy((char *)m_user.login, m_input_buffer, USER_LOGIN_SIZE);
             memset(m_input_buffer, 0, sizeof(m_input_buffer));
             m_input_index = 0;
-            m_input_display_pos = 0x0203;
+            m_input_display_pos = 0x0204;
             m_input_mask = true;
             m_input_phase = PASSWORD;
             m_debug_uart.print("\r\nSenha: ");
@@ -222,24 +254,38 @@ void UserManager::readUserInputNonBlocking()
             m_input_phase = NONE;
             m_debug_uart.print("\r\n");
             m_next_state = AUTHENTICATOR;
-            
-            /*
-             * TODO: Tratar m_next_state quando for para addUser e deleteUser 
-             */
         }
         return;
     }
 
-    // Backspace
-    if ((ch == 0x08 || ch == 0x7F) && m_input_index > 0)
+    if (ch == '*')
     {
-        m_input_index--;
-        m_input_display_pos -= 1;
-        m_input_buffer[m_input_index] = '\0';
-        m_display.writeChar(m_input_display_pos, ' ');
-        m_debug_uart.write((uint8_t*)"\b \b", 3);
+        m_input_mask = !m_input_mask;
+        m_display.writeString(m_input_display_pos, m_input_mask ? std::string(m_input_index, '*').c_str() : m_input_buffer);
         return;
     }
+
+    if (ch == 'Q')
+    {
+        m_input_phase = NONE;
+        m_debug_uart.print("\r\n");
+        m_next_state = INITIAL; // reset to initial state
+        m_display.writeString(0x0104, "    ");
+        m_display.writeString(0x0204, "    ");
+        return;
+    }
+
+    // Backspace
+    // Keyboard does not have backspace
+    // if ((ch == 0x08 || ch == 0x7F || ch == '#') && m_input_index > 0)
+    // {
+    //     m_input_index--;
+    //     m_input_display_pos -= 1;
+    //     m_input_buffer[m_input_index] = '\0';
+    //     m_display.writeChar(m_input_display_pos, ' ');
+    //     m_debug_uart.write((uint8_t*)"\b \b", 3);
+    //     return;
+    // }
 
     if (m_input_index >= USER_PASSWORD_SIZE || ch < 0x20 || ch > 0x7E)
     {
@@ -256,7 +302,33 @@ void UserManager::readUserInputNonBlocking()
     {
         m_debug_uart.write(&ch, 1);
     }
-    
-    m_display.writeChar(m_input_display_pos, m_input_mask ? '*' : ch);
-    m_input_display_pos += 1;
+
+    // when we write char by char the lcd show empty spaces
+    m_display.writeString(m_input_display_pos, m_input_mask ? std::string(m_input_index, '*').c_str() : m_input_buffer);
+    // m_display.writeChar(m_input_display_pos, m_input_mask ? '*' : ch);
+    // m_input_display_pos += 1;
 }
+
+bool UserManager::checkUser(user_t& user)
+{
+    const user_t mock_users[3] = {
+        {"1111", "1111", 0, 1, FOUR},
+        {"2222", "2222", 0, 0, FOUR},
+        {"3333", "3333", 1, 0, FOUR}
+    };
+
+    for (const auto& mock_user : mock_users)
+    {
+        if (strncmp((char *)user.login, (char *)mock_user.login, USER_LOGIN_SIZE) == 0 &&
+            strncmp((char *)user.password, (char *)mock_user.password, USER_PASSWORD_SIZE) == 0)
+        {
+            user.is_blocked = mock_user.is_blocked;
+            user.is_admin = mock_user.is_admin;
+            user.last_access = mock_user.last_access;
+            return true;
+        }
+    }
+
+    return false;
+}
+

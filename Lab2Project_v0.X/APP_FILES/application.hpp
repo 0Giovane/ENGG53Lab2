@@ -1,6 +1,6 @@
 /* 
  * File:   application.hpp
- * Author: Bianca, João Cerqueira
+ * Author: Bianca, Joï¿½o Cerqueira
  *
  * Created on June 4, 2025, 9:59 PM
  */
