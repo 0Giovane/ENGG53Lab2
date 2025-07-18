@@ -41,7 +41,7 @@ int main ( void )
     SYS_Initialize ( NULL );
     
     /* Run user access control application */
-//    application();
+    application();
     
     /* Run unit tests */
 //    keypadTest();
@@ -49,7 +49,7 @@ int main ( void )
 //    codecUserTest();
 //    canProtocolTest();  
 //    eepromTest();
-    canEepromTest();
+//    canEepromTest();
 //    doorLockTest();
      
      

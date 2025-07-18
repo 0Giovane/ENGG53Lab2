@@ -69,6 +69,8 @@ private:
     uint16_t m_input_display_pos;
     bool m_input_mask;
     inputPhase_t m_input_phase;
+
+    bool m_go_to_admin_menu;
     
     void handleInitialState();
     void handleAuthenticatorState();
