@@ -25,6 +25,7 @@ void UserManager::init()
     m_display.clear();
     m_door_lock.close();
     m_debug_uart.print("\r\nControle de acesso iniciado!\r\n");
+    
 }
 
 void UserManager::update()
@@ -51,7 +52,7 @@ void UserManager::update()
 void UserManager::handleInitialState()
 {
     m_debug_uart.print("\r\nProcessando estado inicial!\r\n");
-    
+    mockUsersToEeprom(m_memory,m_debug_uart); 
     setDisplayMessageToUser();
     getKeypadInputUser();
 }
@@ -311,20 +312,39 @@ void UserManager::readUserInputNonBlocking()
 
 bool UserManager::checkUser(user_t& user)
 {
-    const user_t mock_users[3] = {
-        {"1111", "1111", 0, 1, FOUR},
-        {"2222", "2222", 0, 0, FOUR},
-        {"3333", "3333", 1, 0, FOUR}
-    };
+    packedUser_t packed;
+    user_t candidate;
 
-    for (const auto& mock_user : mock_users)
+    for (uint16_t index = 0; index < EEPROM_USER_MAX; ++index)
     {
-        if (strncmp((char *)user.login, (char *)mock_user.login, USER_LOGIN_SIZE) == 0 &&
-            strncmp((char *)user.password, (char *)mock_user.password, USER_PASSWORD_SIZE) == 0)
+        uint16_t addr = index * sizeof(packedUser_t);
+
+        // Lê dados da EEPROM
+        bool ok = m_memory.read(addr, (uint8_t*)&packed, sizeof(packedUser_t));
+        if (!ok)
         {
-            user.is_blocked = mock_user.is_blocked;
-            user.is_admin = mock_user.is_admin;
-            user.last_access = mock_user.last_access;
+            m_debug_uart.print("Erro de leitura na EEPROM!\r\n");
+            continue;
+        }
+
+        // Ignora slots vazios
+        if (packed.login[0] == 0xFF || packed.login[0] == 0x00)
+        {
+            continue;
+        }
+
+        // Desempacota para comparar
+        candidate = unpackUser(packed);
+
+        // Compara login e senha
+        if (strncmp((char*)candidate.login, (char*)user.login, USER_LOGIN_SIZE) == 0 &&
+            strncmp((char*)candidate.password, (char*)user.password, USER_PASSWORD_SIZE) == 0)
+        {
+            // Atualiza o usuário passado com os dados encontrados
+            user.is_admin    = candidate.is_admin;
+            user.is_blocked  = candidate.is_blocked;
+            user.last_access = candidate.last_access;
+
             return true;
         }
     }
@@ -332,3 +352,31 @@ bool UserManager::checkUser(user_t& user)
     return false;
 }
 
+void UserManager::mockUsersToEeprom(Eeprom24cxx& memory, DebugUart& uart)
+{
+    const user_t example_users[3] = {
+        { "1111", "1111", 0, 1, FOUR },
+        { "2222", "2222", 0, 0, FOUR },
+        { "3333", "3333", 1, 0, FOUR }
+    };
+
+    for (uint16_t i = 0; i < 3; ++i)
+    {
+        packedUser_t packed = packUser(example_users[i]);
+        uint16_t addr = i * sizeof(packedUser_t);
+
+        bool ok = memory.write(addr, (uint8_t*)&packed, sizeof(packedUser_t));
+        if (ok)
+        {
+            char msg[64];
+            snprintf(msg, sizeof(msg), "Usuario %d salvo com login: %s\r\n", i, example_users[i].login);
+            uart.print(msg);
+        }
+        else
+        {
+            uart.print("Falha ao salvar usuario na EEPROM!\r\n");
+        }
+
+        delayMs(10); // pequeno delay entre escritas (pode ajustar)
+    }
+}

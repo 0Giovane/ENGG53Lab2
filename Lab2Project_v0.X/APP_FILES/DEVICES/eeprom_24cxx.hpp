@@ -20,6 +20,8 @@
 #define EEPROM_MAX_INDEX        512 /*(EEPROM_SIZE_BYTES / EEPROM_SLOT_SIZE)*/
 #define EEPROM_WRITE_DELAY_MS   5
 
+#define EEPROM_USER_SLOT_SIZE sizeof(packedUser_t)  // = 5
+#define EEPROM_USER_MAX       (EEPROM_SIZE_BYTES / EEPROM_USER_SLOT_SIZE)
 typedef enum 
 {
     EEPROM_IDLE,
@@ -45,6 +47,9 @@ public:
     bool isBusy () const;        
     bool hasError() const;
 
+    bool write(uint16_t address, const uint8_t* data, uint16_t size);
+    bool read (uint16_t address,       uint8_t* data, uint16_t size);
+
 private:
     
     volatile bool m_transfer_done;      
@@ -59,8 +64,7 @@ private:
     static void callback(uintptr_t context);
     void   registerCallback();
 
-    bool write(uint16_t address, const uint8_t* data, uint16_t size);
-    bool read (uint16_t address,       uint8_t* data, uint16_t size);
+    
 };
 
 #endif /* EEPROM_24CXX_HPP */

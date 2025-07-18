@@ -45,11 +45,13 @@ public:
     
     bool checkUser(user_t& user);
     bool saveUser(user_t& user);
-
+    
     void setDisplayMessageToUser();
     void getKeypadInputUser();  
     void readUserInputNonBlocking();
     void setAuthorization();
+    void mockUsersToEeprom(Eeprom24cxx& memory, DebugUart& debug_uart);
+    bool checkUser();
     
 private:
     DoorLock& m_door_lock;
