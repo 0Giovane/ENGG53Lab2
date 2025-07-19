@@ -4,7 +4,7 @@
 
 
 project: ENGG53Lab2
-creation_date: 2025-07-13T03:08:27.437-03:00[America/Sao_Paulo]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2025-07-19T00:59:26.428-03:00[America/Bahia]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
 mcc_mode: IDE            # [IDE|Standalone|Headless]
 mcc_version: v5.5.1
@@ -14,7 +14,7 @@ harmony_version: v1.5.5
 compiler: XC32 4.60
 
 modules:
-    - {name: "csp", version: "v3.22.5"}
+    - {name: "csp", version: "v3.22.4"}
 
 packs:
     - {name: "PIC32MX_DFP", version: "1.6.369"}
