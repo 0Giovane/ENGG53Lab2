@@ -28,6 +28,20 @@ void Eeprom24cxx::registerCallback()
     I2C1_CallbackRegister(Eeprom24cxx::callback, (uintptr_t)this);
 }
 
+uint16_t Eeprom24cxx::findFirstEmptySlot()
+{
+    packedUser_t temp;
+    for (uint16_t i = 0; i < EEPROM_MAX_INDEX; ++i)
+    {
+        if (!readFromIndex(i, &temp, sizeof(packedUser_t)))
+            continue;
+
+        if (temp.login[0] == 0xFF || temp.login[0] == 0x00)
+            return i;
+    }
+    return EEPROM_NO_SLOT_AVAILABLE; // Nenhum slot vazio encontrado
+}
+
 bool Eeprom24cxx::writeToIndex(uint16_t index, const void* w_data, uint16_t size)
 {
     if (index >= EEPROM_MAX_INDEX || size > EEPROM_SLOT_SIZE || w_data == nullptr)
