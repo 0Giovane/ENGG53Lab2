@@ -45,6 +45,8 @@ public:
     bool writeToIndex(uint16_t index, const void* w_data, uint16_t size);
     bool readFromIndex (uint16_t index, void*   r_data, uint16_t size);
     uint16_t findFirstEmptySlot(); //returns the index
+    int16_t findUserByLogin(const char* login);
+    bool deleteUserAtIndex(uint16_t index);
 
     bool isBusy () const;        
     bool hasError() const;

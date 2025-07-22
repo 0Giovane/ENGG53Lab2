@@ -53,6 +53,8 @@ public:
     void mockUsersToEeprom(Eeprom24cxx& memory, DebugUart& debug_uart);
     void debugListAllUsers();
     bool checkUser();
+    bool writeUserEeprom(user_t& user);
+    bool deleteUserEeprom(const char* login);
     
 private:
     DoorLock& m_door_lock;

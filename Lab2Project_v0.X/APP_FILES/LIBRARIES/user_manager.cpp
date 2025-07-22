@@ -353,6 +353,7 @@ bool UserManager::checkUser(user_t& user)
     return false;
 }
 
+
 void UserManager::mockUsersToEeprom(Eeprom24cxx& memory, DebugUart& uart)
 {
     const user_t example_users[3] = {
@@ -406,4 +407,36 @@ void UserManager::debugListAllUsers()
 
         m_debug_uart.print(msg);
     }
+}
+
+//criar função inserir usuario e excluir usuário na EEPROM
+bool UserManager::writeUserEeprom(user_t& user)
+{
+    int index = m_memory.findFirstEmptySlot();
+    if (index < 0)
+    {
+        m_debug_uart.print("EEPROM cheia! Nao foi possivel salvar usuario.\r\n");
+        return false;
+    }
+
+    packedUser_t packed = packUser(user);
+    return m_memory.writeToIndex(index, &packed, sizeof(packedUser_t));
+}
+
+bool UserManager::deleteUserEeprom(const char* login)
+{
+    int16_t index = m_memory.findUserByLogin(login);
+    if (index < 0)
+    {
+        m_debug_uart.print("Usuario nao encontrado na EEPROM.\r\n");
+        return false;
+    }
+
+    bool ok = m_memory.deleteUserAtIndex(index);
+    if (ok)
+        m_debug_uart.print("Usuario deletado com sucesso.\r\n");
+    else
+        m_debug_uart.print("Falha ao deletar usuario da EEPROM.\r\n");
+
+    return ok;
 }
