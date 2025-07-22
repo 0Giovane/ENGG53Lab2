@@ -19,6 +19,7 @@
 #define EEPROM_SLOT_SIZE        16
 #define EEPROM_MAX_INDEX        512 /*(EEPROM_SIZE_BYTES / EEPROM_SLOT_SIZE)*/
 #define EEPROM_WRITE_DELAY_MS   5
+#define EEPROM_NO_SLOT_AVAILABLE 0xFFFF
 
 #define EEPROM_USER_SLOT_SIZE sizeof(packedUser_t)  // = 5
 #define EEPROM_USER_MAX       (EEPROM_SIZE_BYTES / EEPROM_USER_SLOT_SIZE)
@@ -43,6 +44,7 @@ public:
 
     bool writeToIndex(uint16_t index, const void* w_data, uint16_t size);
     bool readFromIndex (uint16_t index, void*   r_data, uint16_t size);
+    uint16_t findFirstEmptySlot(); //returns the index
 
     bool isBusy () const;        
     bool hasError() const;
