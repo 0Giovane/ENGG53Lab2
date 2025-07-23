@@ -412,7 +412,7 @@ void UserManager::debugListAllUsers()
 //criar função inserir usuario e excluir usuário na EEPROM
 bool UserManager::writeUserEeprom(user_t& user)
 {
-    int index = m_memory.findFirstEmptySlot();
+    uint16_t index = m_memory.findFirstEmptySlot();
     if (index < 0)
     {
         m_debug_uart.print("EEPROM cheia! Nao foi possivel salvar usuario.\r\n");
@@ -426,7 +426,8 @@ bool UserManager::writeUserEeprom(user_t& user)
 bool UserManager::deleteUserEeprom(const char* login)
 {
     int16_t index = m_memory.findUserByLogin(login);
-    if (index < 0)
+    
+    if (index == EEPROM_NO_SLOT_AVAILABLE)
     {
         m_debug_uart.print("Usuario nao encontrado na EEPROM.\r\n");
         return false;
