@@ -31,8 +31,9 @@ typedef enum
 {
     NONE,
     LOGIN,
-    PASSWORD
-            
+    PASSWORD,
+    SET_ADMIN
+    
 } inputPhase_t;
 
 class UserManager
@@ -59,6 +60,7 @@ private:
     DebugUart& m_debug_uart;
     
     user_t m_user;
+    user_t target_user; // used for register or delete user operation
     
     state_t m_current_state;
     state_t m_next_state;

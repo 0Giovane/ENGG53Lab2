@@ -18,6 +18,8 @@ UserManager::UserManager(DoorLock& door_lock, Lcd12864& display, Keypad& keypad,
     m_input_phase = NONE;
 
     m_go_to_admin_menu = false; // flag to indicate if the user wants to go to admin menu
+
+    target_user = {0};
 }
 
 void UserManager::init()
@@ -101,25 +103,211 @@ void UserManager::handleAdminMenuState()
 {
     m_debug_uart.print("\r\nProcessando estado de menu do admin!\r\n");
     setDisplayMessageToUser();
-    
-    /*
-     * TODO: implementar casos para analisando input do teclado:
-     * [1] m_next_state = USER_ACCESS
-     * [2] m_next_state = REGISTER_USER
-     * [3] m_next_state = DELETE_USER
-     */
+
+    uint8_t ch;
+    ch = m_keypad.waitNextKey();
+
+    if (ch == '1') // Enter/Exit
+    {
+        m_next_state = USER_ACCESS;
+    }
+    else if (ch == '2') // Register User
+    {
+        m_next_state = REGISTER_USER;
+    }
+    else if (ch == '3') // Delete User
+    {
+        m_next_state = DELETE_USER;
+    }
+    else if (ch == 'Q') // Exit Admin Menu
+    {
+        m_next_state = INITIAL;
+    }
 }
 
 void UserManager::handleRegisterUserState()
 {
     m_debug_uart.print("\r\nProcessando estado de registro do usuario !\r\n");
     setDisplayMessageToUser();
+
+    if (m_input_phase == NONE)
+    {
+        m_debug_uart.print("\r\nLogin: ");
+        memset(m_input_buffer, 0, sizeof(m_input_buffer));
+        m_input_index = 0;
+        m_input_display_pos = 0x0104;
+        m_input_mask = false;
+        m_input_phase = LOGIN;
+    }
+
+    uint8_t ch;
+    ch = m_keypad.waitNextKey();
+
+    if (ch == '\r' || ch == '\n' || ch == 'D') // D is the down key, enter on keyboard may not work
+    {
+        if (m_input_index != 4)
+        {
+            return; // invalid input length
+        }
+
+        m_input_buffer[m_input_index] = '\0'; 
+
+        if (m_input_phase == LOGIN) 
+        {
+            strncpy((char *)target_user.login, m_input_buffer, USER_LOGIN_SIZE);
+            memset(m_input_buffer, 0, sizeof(m_input_buffer));
+            m_input_index = 0;
+            m_input_display_pos = 0x0204;
+            m_input_mask = true;
+            m_input_phase = PASSWORD;
+            m_debug_uart.print("\r\nSenha: ");
+        }
+        else if (m_input_phase == PASSWORD) 
+        {
+            strncpy((char *)target_user.password, m_input_buffer, USER_PASSWORD_SIZE);
+            m_input_phase = SET_ADMIN;
+            m_debug_uart.print("\r\n");
+        }
+        else if (m_input_phase == SET_ADMIN)
+        {
+            if (ch == '1') // Admin
+            {
+                target_user.is_admin = 1;
+            }
+            else if (ch == '2') // Normal User
+            {
+                target_user.is_admin = 0;
+            }
+            else
+            {
+                m_debug_uart.print("Opcao invalida! Use 1 para admin ou 2 para normal.\r\n");
+                return;
+            }
+
+            target_user.is_blocked = 0; // default to non-blocked
+            target_user.last_access = FOUR; // default to room 4
+
+            if (writeUserEeprom(target_user))
+            {
+                m_debug_uart.print("Usuario registrado com sucesso!\r\n");
+                m_next_state = INITIAL; // reset to initial state after registration
+            }
+            else
+            {
+                m_debug_uart.print("Falha ao registrar usuario na EEPROM!\r\n");
+                m_next_state = INITIAL; // reset to initial state on failure
+            }
+        }
+        return;
+    }
+
+    if (ch == '*')
+    {
+        m_input_mask = !m_input_mask;
+        m_display.writeString(m_input_display_pos, m_input_mask ? std::string(m_input_index, '*').c_str() : m_input_buffer);
+        return;
+    }
+
+    if (ch == 'Q')
+    {
+        m_input_phase = NONE;
+        m_debug_uart.print("\r\n");
+        m_display.writeString(0x0104, "    ");
+        m_display.writeString(0x0204, "    ");
+        return;
+    }
+
+    if (m_input_index >= USER_PASSWORD_SIZE || ch < 0x20 || ch > 0x7E)
+    {
+        return;
+    }
+
+    m_input_buffer[m_input_index++] = ch;
+
+    if (m_input_mask)
+    {
+        m_debug_uart.write((uint8_t*)"*", 1);
+    }
+    else
+    {
+        m_debug_uart.write(&ch, 1);
+    }
+
+    m_display.writeString(m_input_display_pos, m_input_mask ? std::string(m_input_index, '*').c_str() : m_input_buffer);
 }
 
 void UserManager::handleDeleteUserState()
 {
     m_debug_uart.print("\r\nProcessando estado de deletar usuario!\r\n");
     setDisplayMessageToUser();
+
+    if (m_input_phase == NONE)
+    {
+        m_debug_uart.print("\r\nLogin: ");
+        memset(m_input_buffer, 0, sizeof(m_input_buffer));
+        m_input_index = 0;
+        m_input_display_pos = 0x0104;
+        m_input_mask = false;
+        m_input_phase = LOGIN;
+    }
+
+    uint8_t ch;
+    ch = m_keypad.waitNextKey();
+
+    if (ch == '\r' || ch == '\n' || ch == 'D') // D is the down key, enter on keyboard may not work
+    {
+        if (m_input_index != 4)
+        {
+            return; // invalid input length
+        }
+
+        m_input_buffer[m_input_index] = '\0'; 
+
+        if (m_input_phase == LOGIN) 
+        {
+            strncpy((char *)target_user.login, m_input_buffer, USER_LOGIN_SIZE);
+            m_input_phase = NONE;
+            m_debug_uart.print("\r\n");
+            m_next_state = INITIAL; // reset to initial state after deletion
+            char* login_str = reinterpret_cast<char*>(target_user.login);
+            deleteUserEeprom(login_str);
+        }
+        return;
+    }
+
+    if (ch == '*')
+    {
+        m_input_mask = !m_input_mask;
+        m_display.writeString(m_input_display_pos, m_input_mask ? std::string(m_input_index, '*').c_str() : m_input_buffer);
+        return;
+    }
+
+    if (ch == 'Q')
+    {
+        m_input_phase = NONE;
+        m_debug_uart.print("\r\n");
+        m_display.writeString(0x0104, "    ");
+        m_display.writeString(0x0204, "    ");
+        return;
+    }
+
+    if (m_input_index >= USER_PASSWORD_SIZE || ch < 0x20 || ch > 0x7E)
+    {
+        return;
+    }
+
+    m_input_buffer[m_input_index++] = ch;
+
+    if (m_input_mask)
+    {
+        m_debug_uart.write((uint8_t*)"*", 1);
+    }
+    else
+    {
+        m_debug_uart.write(&ch, 1);
+    }
+
+    m_display.writeString(m_input_display_pos, m_input_mask ? std::string(m_input_index, '*').c_str() : m_input_buffer);
 }
 
 void UserManager::handleUserAccessState()
@@ -161,18 +349,20 @@ void UserManager::setDisplayMessageToUser()
         
         case REGISTER_USER:
         {
-            m_display.writeString(LINE_1 ,"     SALA 4     ");
-            m_display.writeString(LINE_2, "Login:");
-            m_display.writeString(LINE_3, "Senha:");
+            m_display.writeString(LINE_1 , (std::string("     SALA 4    ") + (m_go_to_admin_menu ? "A" : " ")).c_str());
+            m_display.writeString(LINE_2, (std::string("Login:") + (m_input_phase == LOGIN || m_input_phase == NONE ? "> ":" " )).c_str());
+            m_display.writeString(LINE_3, (std::string("Senha:") + (m_input_phase == PASSWORD ? "> ":" " )).c_str());
             m_display.writeString(LINE_4, "[1]Admin [2]Normal");
             break;
         }
 
         case DELETE_USER:
         {
-            m_display.writeString(LINE_1 ,"     SALA 4     ");
-            m_display.writeString(LINE_2, "Login:");
-             break;
+            m_display.writeString(LINE_1 , (std::string("     SALA 4    ") + (m_go_to_admin_menu ? "A" : " ")).c_str());
+            m_display.writeString(LINE_2, (std::string("Login:") + (m_input_phase == LOGIN || m_input_phase == NONE ? "> ":" " )).c_str());
+            m_display.writeString(LINE_3, "                    ");
+            m_display.writeString(LINE_4, "                    ");
+            break;
         }
         
         case USER_ACCESS:  
