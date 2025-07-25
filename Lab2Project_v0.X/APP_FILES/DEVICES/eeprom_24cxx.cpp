@@ -42,6 +42,35 @@ uint16_t Eeprom24cxx::findFirstEmptySlot()
     return EEPROM_NO_SLOT_AVAILABLE; // Nenhum slot vazio encontrado
 }
 
+int16_t Eeprom24cxx::findUserByLogin(const char* login)
+{
+    packedUser_t packed;
+    for (uint16_t i = 0; i < EEPROM_MAX_INDEX; ++i)
+    {
+        if (!readFromIndex(i, &packed, sizeof(packedUser_t)))
+            continue;
+
+        if (packed.login[0] == 0xFF || packed.login[0] == 0x00)
+            continue;
+
+        user_t u = unpackUser(packed);
+        if (strncmp((char*)u.login, login, USER_LOGIN_SIZE) == 0)
+            return i;
+    }
+    return -1;
+}
+
+bool Eeprom24cxx::deleteUserAtIndex(uint16_t index)
+{
+    if (index >= EEPROM_MAX_INDEX)
+        return false;
+
+    uint8_t empty[sizeof(packedUser_t)];
+    memset(empty, 0xFF, sizeof(empty));
+
+    return writeToIndex(index, empty, sizeof(packedUser_t));
+}
+
 bool Eeprom24cxx::writeToIndex(uint16_t index, const void* w_data, uint16_t size)
 {
     if (index >= EEPROM_MAX_INDEX || size > EEPROM_SLOT_SIZE || w_data == nullptr)

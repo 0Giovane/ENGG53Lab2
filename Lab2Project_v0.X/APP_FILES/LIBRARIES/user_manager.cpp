@@ -53,6 +53,7 @@ void UserManager::handleInitialState()
     m_debug_uart.print("\r\nProcessando estado inicial!\r\n");
     
     setDisplayMessageToUser();
+    mockUsersToEeprom(m_memory, m_debug_uart); 
     getKeypadInputUser();
 }
 
@@ -137,7 +138,7 @@ void UserManager::setDisplayMessageToUser()
     {
         case INITIAL: 
         {
-            m_display.writeString(LINE_1 , (std::string("     SALA 4    ") + (m_go_to_admin_menu ? "A" : " ]")).c_str());
+            m_display.writeString(LINE_1 , (std::string("     SALA 4    ") + (m_go_to_admin_menu ? "A" : " ")).c_str());
             m_display.writeString(LINE_2, (std::string("Login:") + (m_input_phase == LOGIN || m_input_phase == NONE ? "> ":" " )).c_str());
             m_display.writeString(LINE_3, (std::string("Senha:") + (m_input_phase == PASSWORD ? "> ":" " )).c_str());
             m_display.writeString(LINE_4, "                    ");
@@ -311,10 +312,44 @@ void UserManager::readUserInputNonBlocking()
 
 bool UserManager::checkUser(user_t& user)
 {
+    packedUser_t packed;
+    user_t candidate;
+
+   for (uint16_t index = 0; index < EEPROM_USER_MAX; ++index)
+    {
+        uint16_t addr = index * sizeof(packedUser_t);
+
+        // Lê dados da EEPROM
+        bool ok = m_memory.read(addr, (uint8_t*)&packed, sizeof(packedUser_t));
+        if (!ok)
+        {
+            m_debug_uart.print("Erro de leitura na EEPROM!\r\n");
+            continue;
+        }
+
+        // Ignora slots vazios
+        if (packed.login[0] == 0xFF || packed.login[0] == 0x00)
+        {
+            continue;
+        }
+
+        // Desempacota para comparar
+        candidate = unpackUser(packed);
+
+        // Compara login e senha
+        if (strncmp((char*)candidate.login, (char*)user.login, USER_LOGIN_SIZE) == 0 &&
+            strncmp((char*)candidate.password, (char*)user.password, USER_PASSWORD_SIZE) == 0)
+        {
+            // Atualiza o usuário passado com os dados encontrados
+            user.is_admin    = candidate.is_admin;
+            user.is_blocked  = candidate.is_blocked;
+            user.last_access = candidate.last_access;
+            return true;
+        }
+    }
+
     const user_t mock_users[3] = {
-        {"1111", "1111", 0, 1, FOUR},
-        {"2222", "2222", 0, 0, FOUR},
-        {"3333", "3333", 1, 0, FOUR}
+        {"4444", "4444", 0, 1, FOUR},
     };
 
     for (const auto& mock_user : mock_users)
@@ -332,3 +367,64 @@ bool UserManager::checkUser(user_t& user)
     return false;
 }
 
+void UserManager::mockUsersToEeprom(Eeprom24cxx& memory, DebugUart& uart)
+{
+    const user_t example_users[3] = {
+        { "1111", "1111", 0, 1, FOUR },
+        { "2222", "2222", 0, 0, FOUR },
+        { "3333", "3333", 1, 0, FOUR }
+    };
+
+    for (uint16_t i = 0; i < 3; ++i)
+    {
+        packedUser_t packed = packUser(example_users[i]);
+        uint16_t addr = i * sizeof(packedUser_t);
+
+        bool ok = memory.write(addr, (uint8_t*)&packed, sizeof(packedUser_t));
+        if (ok)
+        {
+            char msg[64];
+            snprintf(msg, sizeof(msg), "Usuario %d salvo com login: %s\r\n", i, example_users[i].login);
+            uart.print(msg);
+        }
+        else
+        {
+            LED_L1_Set();
+            uart.print("Falha ao salvar usuario na EEPROM!\r\n");
+        }
+
+        delayMs(10); // pequeno delay entre escritas (pode ajustar)
+    }
+}
+
+//criar função inserir usuario e excluir usuário na EEPROM
+bool UserManager::writeUserEeprom(user_t& user)
+{
+    uint16_t index = m_memory.findFirstEmptySlot();
+    if (index < 0)
+    {
+        m_debug_uart.print("EEPROM cheia! Nao foi possivel salvar usuario.\r\n");
+        return false;
+    }
+
+    packedUser_t packed = packUser(user);
+    return m_memory.writeToIndex(index, &packed, sizeof(packedUser_t));
+}
+
+bool UserManager::deleteUserEeprom(const char* login)
+{
+    int16_t index = m_memory.findUserByLogin(login);
+    if (index == EEPROM_NO_SLOT_AVAILABLE)
+    {
+        m_debug_uart.print("Usuario nao encontrado na EEPROM.\r\n");
+        return false;
+    }
+
+    bool ok = m_memory.deleteUserAtIndex(index);
+    if (ok)
+        m_debug_uart.print("Usuario deletado com sucesso.\r\n");
+    else
+        m_debug_uart.print("Falha ao deletar usuario da EEPROM.\r\n");
+
+    return ok;
+}

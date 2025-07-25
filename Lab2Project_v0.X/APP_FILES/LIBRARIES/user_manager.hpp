@@ -42,14 +42,13 @@ public:
     
     void init();
     void update(); //run fsm
-    
     bool checkUser(user_t& user);
-    bool saveUser(user_t& user);
-
     void setDisplayMessageToUser();
     void getKeypadInputUser();  
     void readUserInputNonBlocking();
-    void setAuthorization();
+    void mockUsersToEeprom(Eeprom24cxx& memory, DebugUart& debug_uart);
+    bool writeUserEeprom(user_t& user);
+    bool deleteUserEeprom(const char* login);
     
 private:
     DoorLock& m_door_lock;

@@ -21,6 +21,9 @@
 #define EEPROM_WRITE_DELAY_MS   5
 #define EEPROM_NO_SLOT_AVAILABLE 0xFFFF
 
+#define EEPROM_USER_SLOT_SIZE sizeof(packedUser_t)  // = 5
+#define EEPROM_USER_MAX       (EEPROM_SIZE_BYTES / EEPROM_USER_SLOT_SIZE)
+
 typedef enum 
 {
     EEPROM_IDLE,
@@ -43,9 +46,14 @@ public:
     uint16_t findFirstEmptySlot(); // returns index
     bool writeToIndex(uint16_t index, const void* w_data, uint16_t size);
     bool readFromIndex (uint16_t index, void*   r_data, uint16_t size);
+    int16_t findUserByLogin(const char* login);
+    bool deleteUserAtIndex(uint16_t index);
 
     bool isBusy () const;        
     bool hasError() const;
+
+    bool write(uint16_t address, const uint8_t* data, uint16_t size);
+    bool read (uint16_t address,       uint8_t* data, uint16_t size);
 
 private:
     
@@ -60,9 +68,6 @@ private:
     
     static void callback(uintptr_t context);
     void   registerCallback();
-
-    bool write(uint16_t address, const uint8_t* data, uint16_t size);
-    bool read (uint16_t address,       uint8_t* data, uint16_t size);
 };
 
 #endif /* EEPROM_24CXX_HPP */

@@ -61,7 +61,7 @@ void DoorLock::update()
                 GPIO_PinSet(m_gpio_pin);
                 m_delay_counter = 0;
                 m_state = DOOR_LOCK_OPENED_WAIT;
-                LED_TEST_Set();
+                LED_L4_Set();
             }
             break;
         }
@@ -72,7 +72,7 @@ void DoorLock::update()
             {
                 GPIO_PinClear(m_gpio_pin);
                 m_state = DOOR_LOCK_CLOSING;
-                LED_TEST_Clear();
+                LED_L4_Clear();
             }
             break;
         }
