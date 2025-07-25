@@ -92,6 +92,7 @@ void Eeprom24cxx::update()
     {
         case EEPROM_WRITE_START:
         {
+            LED_L1_Set();
             if (I2C1_Write(I2C_EEPROM_ADDRESS, m_buffer, m_data_size + 2))
             {
                 m_current_state = EEPROM_WRITE_WAIT_BUS;
@@ -104,6 +105,7 @@ void Eeprom24cxx::update()
         }
         case EEPROM_WRITE_WAIT_BUS:
         {
+            LED_L2_Set();
             if (m_transfer_done)              
             {
                 m_delay_counter = 0;          
@@ -113,6 +115,7 @@ void Eeprom24cxx::update()
         }
         case EEPROM_WRITE_WAIT_CYCLE:
         {
+            LED_L3_Set();
             if (++m_delay_counter >= EEPROM_WRITE_DELAY_MS)
             {
                 m_current_state = EEPROM_IDLE;       
@@ -121,6 +124,7 @@ void Eeprom24cxx::update()
         }
         case EEPROM_READ_START:
         {
+            LED_L4_Set();
             if (I2C1_WriteRead(I2C_EEPROM_ADDRESS, m_buffer, 2, m_target_buffer, m_data_size))
             {
                 m_current_state = EEPROM_READ_WAIT;
