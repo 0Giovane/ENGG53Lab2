@@ -88,8 +88,8 @@ void GPIO_Initialize ( void )
     /* PORTF Initialization */
 
     /* PORTG Initialization */
-    LATG = 0xf004; /* Initial Latch Value */
-    TRISGCLR = 0xf004; /* Direction Control */
+    LATG = 0xf001; /* Initial Latch Value */
+    TRISGCLR = 0xf001; /* Direction Control */
 
 
     CNPUESET = 0xff; /* Pull-Up Enable */

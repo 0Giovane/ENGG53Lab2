@@ -82,8 +82,8 @@
 #define KEYPAD_COL1_Get()               ((PORTG >> 6) & 0x1)
 #define KEYPAD_COL1_GetLatch()          ((LATG >> 6) & 0x1)
 #define KEYPAD_COL1_PIN                  GPIO_PIN_RG6
-#define KEYPAD_COL1_InterruptEnable()   (CNENSET = (1<<8))
-#define KEYPAD_COL1_InterruptDisable()  (CNENCLR = (1<<8))
+#define KEYPAD_COL1_InterruptEnable()   (CNENGSET = (1<<6))
+#define KEYPAD_COL1_InterruptDisable()  (CNENGCLR = (1<<6))
 
 /*** Macros for KEYPAD_COL2 pin ***/
 #define KEYPAD_COL2_Set()               (LATGSET = (1<<7))
@@ -94,8 +94,8 @@
 #define KEYPAD_COL2_Get()               ((PORTG >> 7) & 0x1)
 #define KEYPAD_COL2_GetLatch()          ((LATG >> 7) & 0x1)
 #define KEYPAD_COL2_PIN                  GPIO_PIN_RG7
-#define KEYPAD_COL2_InterruptEnable()   (CNENSET = (1<<9))
-#define KEYPAD_COL2_InterruptDisable()  (CNENCLR = (1<<9))
+#define KEYPAD_COL2_InterruptEnable()   (CNENGSET = (1<<7))
+#define KEYPAD_COL2_InterruptDisable()  (CNENGCLR = (1<<7))
 
 /*** Macros for KEYPAD_COL3 pin ***/
 #define KEYPAD_COL3_Set()               (LATGSET = (1<<8))
@@ -181,16 +181,6 @@
 #define UART2_TX_GetLatch()          ((LATF >> 5) & 0x1)
 #define UART2_TX_PIN                  GPIO_PIN_RF5
 
-/*** Macros for KEYPAD_ROW5 pin ***/
-#define KEYPAD_ROW5_Set()               (LATGSET = (1<<2))
-#define KEYPAD_ROW5_Clear()             (LATGCLR = (1<<2))
-#define KEYPAD_ROW5_Toggle()            (LATGINV= (1<<2))
-#define KEYPAD_ROW5_OutputEnable()      (TRISGCLR = (1<<2))
-#define KEYPAD_ROW5_InputEnable()       (TRISGSET = (1<<2))
-#define KEYPAD_ROW5_Get()               ((PORTG >> 2) & 0x1)
-#define KEYPAD_ROW5_GetLatch()          ((LATG >> 2) & 0x1)
-#define KEYPAD_ROW5_PIN                  GPIO_PIN_RG2
-
 /*** Macros for I2C1_SCL pin ***/
 #define I2C1_SCL_Get()               ((PORTA >> 14) & 0x1)
 #define I2C1_SCL_GetLatch()          ((LATA >> 14) & 0x1)
@@ -240,6 +230,16 @@
 #define LED_L4_Get()               ((PORTD >> 11) & 0x1)
 #define LED_L4_GetLatch()          ((LATD >> 11) & 0x1)
 #define LED_L4_PIN                  GPIO_PIN_RD11
+
+/*** Macros for KEYPAD_ROW5 pin ***/
+#define KEYPAD_ROW5_Set()               (LATGSET = (1<<0))
+#define KEYPAD_ROW5_Clear()             (LATGCLR = (1<<0))
+#define KEYPAD_ROW5_Toggle()            (LATGINV= (1<<0))
+#define KEYPAD_ROW5_OutputEnable()      (TRISGCLR = (1<<0))
+#define KEYPAD_ROW5_InputEnable()       (TRISGSET = (1<<0))
+#define KEYPAD_ROW5_Get()               ((PORTG >> 0) & 0x1)
+#define KEYPAD_ROW5_GetLatch()          ((LATG >> 0) & 0x1)
+#define KEYPAD_ROW5_PIN                  GPIO_PIN_RG0
 
 /*** Macros for LED_TEST pin ***/
 #define LED_TEST_Set()               (LATESET = (1<<0))
